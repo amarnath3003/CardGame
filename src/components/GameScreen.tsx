@@ -85,7 +85,7 @@ export const GameScreen: React.FC = () => {
       />
 
       <div
-        className={`game-header absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
+        className={`game-header absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
           layout.isCompactLandscape ? 'px-4 py-1.5' : 'px-6 py-2 md:py-3'
         }`}
       >
