@@ -112,12 +112,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               return (
               <motion.div
                 key={i}
-                initial={{ rotate: 0, y: 50, x: -50 * i }}
-                animate={{ rotate: c.rot, y: c.y, x: 0 }}
-                whileHover={{ scale: 1.1, y: c.y - 20, zIndex: 50 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 * i }}
-                className={`relative -ml-8 md:-ml-12 w-20 h-32 md:w-28 md:h-44 text-xl md:text-2xl bg-gradient-to-br ${c.bg} border-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center cursor-pointer border-[4px] overflow-hidden`}
-                style={{ transformOrigin: 'bottom center', zIndex: i }}
+                className={`relative -ml-8 md:-ml-12 w-20 h-32 md:w-28 md:h-44 text-xl md:text-2xl bg-gradient-to-br ${c.bg} border-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center border-[4px] overflow-hidden`}
+                style={{ 
+                  transformOrigin: 'bottom center', 
+                  zIndex: i,
+                  transform: `rotate(${c.rot}deg) translateY(${c.y}px)`
+                }}
               >
                 {/* Central ellipse backdrop */}
                 <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
