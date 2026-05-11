@@ -113,16 +113,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           transition={{ duration: 0.5, type: 'spring' }}
           type="button"
           onClick={() => setIsProfileOpen(true)}
-          className="group flex items-center gap-3 rounded-[24px] border-[3px] border-white/40 bg-white/10 p-2 pr-5 shadow-[0_8px_20px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-md transition-all hover:bg-white/20 hover:scale-105 hover:border-yellow-200/60 active:scale-95"
+          className="group relative flex items-center justify-center rounded-full border-[3px] border-white/40 bg-white/10 p-1 shadow-[0_8px_20px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-md transition-all hover:bg-white/20 hover:scale-105 hover:border-yellow-200/60 active:scale-95"
         >
-          <div className="relative">
-             <AvatarBadge avatarIndex={profile.avatarIndex} label={profile.name} size="sm" />
-             <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#1e40af] bg-green-400" />
-          </div>
-          <div className="text-left">
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-yellow-300 drop-shadow-md">Player</p>
-            <p className="text-sm font-bold text-white drop-shadow-sm line-clamp-1 max-w-[100px]">{profile.name}</p>
-          </div>
+          <AvatarBadge avatarIndex={profile.avatarIndex} label={profile.name} size="sm" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-[#1e40af] bg-green-400" />
         </motion.button>
       </div>
 
