@@ -50,8 +50,57 @@ print("lead: Player ", find_lead(hands))
 def middeck(hands,lead_index,aceposition):
     middeck = []
     print("Player ", lead_index, " can add Ace Spade (14,3) to middeck")
-    middeck.append(hands[lead_index].pop(aceposition))
+    middeck.append({
+    "player": lead_index,
+    "card": hands[lead_index].pop(aceposition)})
     print("Middeck: ", middeck)  # Assuming ChosenCardIndex is defined elsewhere
     return middeck
 
-middeck(hands,find_lead(hands)[0],find_lead(hands)[1])
+lead_info = find_lead(hands)
+if lead_info is not None:
+    middeck_result = middeck(hands, lead_info[0], lead_info[1])
+    required_suit = middeck_result[0]['card'][1]
+    print("Required Suit: ", required_suit)
+
+def player_rotation(current_player):
+    next_player_index = (current_player + 1) % 4
+    return next_player_index
+
+
+def play_card(player, middeck, required_suit, hands):
+
+    # Check if player has required suit
+    for i, card in enumerate(player):
+
+        # Normal play
+        if card[1] == required_suit:
+
+            played_card = player.pop(i)
+
+            middeck.append({
+                "player": hands.index(player),
+                "card": played_card
+            })
+
+            print("Player", hands.index(player), "plays:", played_card)
+
+            return {
+                "cut": False,
+                "played_card": played_card
+            }
+
+    # CUT condition
+    played_card = player.pop(0)
+
+    middeck.append({
+        "player": hands.index(player),
+        "card": played_card
+    })
+
+    print("Player", hands.index(player),
+          "CUTS with:", played_card)
+
+    return {
+        "cut": True,
+        "played_card": played_card
+    }
