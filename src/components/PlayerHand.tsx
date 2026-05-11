@@ -98,17 +98,17 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     if (compact) {
       return {
         bottom: 'absolute -top-12 left-2 flex flex-col items-center',
-        top: 'absolute -bottom-12 left-24 flex flex-col items-center rotate-180',
-        left: 'absolute -top-10 left-1/2 -translate-x-1/2 -rotate-90',
-        right: 'absolute -top-10 left-1/2 -translate-x-1/2 rotate-90',
+        top: 'absolute -bottom-12 left-24 flex flex-col items-center',
+        left: 'absolute -top-10 left-1/2 -translate-x-1/2',
+        right: 'absolute -top-10 left-1/2 -translate-x-1/2',
       };
     }
 
     return {
       bottom: 'absolute -top-16 left-4 flex flex-col items-center',
-      top: 'absolute -bottom-16 left-32 flex flex-col items-center rotate-180',
-      left: 'absolute -bottom-20 left-1/2 -translate-x-1/2 -rotate-90',
-      right: 'absolute -bottom-20 left-1/2 -translate-x-1/2 rotate-90',
+      top: 'absolute -bottom-16 left-32 flex flex-col items-center',
+      left: 'absolute -bottom-20 left-1/2 -translate-x-1/2',
+      right: 'absolute -bottom-20 left-1/2 -translate-x-1/2',
     };
   }, [compact]);
 
@@ -243,10 +243,16 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     );
   }
 
+  const avatarRotation = position === 'top' ? 180 : position === 'left' ? -90 : position === 'right' ? 90 : 0;
+
   return (
     <div className={`${positionClasses[position]} player-hand player-hand-${position}`}>
       <motion.div
-        animate={{ scale: isCurrentPlayer ? 1.08 : 1, y: isCurrentPlayer && !compact ? -10 : 0 }}
+        animate={{ 
+          scale: isCurrentPlayer ? 1.08 : 1, 
+          y: isCurrentPlayer && !compact ? -10 : 0,
+          rotate: avatarRotation
+        }}
         className={`${avatarClasses[position]} z-20 flex flex-col items-center pointer-events-none`}
       >
         <div
