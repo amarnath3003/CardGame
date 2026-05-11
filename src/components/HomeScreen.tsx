@@ -147,56 +147,53 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </motion.div>
         </motion.div>
 
-        {/* Card Suit Logo - ATTI */}
+        {/* Card Suit Logo - ATTI (overlapping deck) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="flex gap-4 justify-center mb-8"
+          className="flex justify-center items-center mb-8 h-36 md:h-48 pl-8 md:pl-12"
         >
-          {/* A - Hearts */}
-          <motion.div
-            whileHover={{ scale: 1.1, rotateZ: -5 }}
-            transition={{ type: "spring", bounce: 0.5 }}
-            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
-          >
-            <Heart className="w-6 h-6 text-red-600 fill-red-600" />
-            <span className="font-black text-3xl text-red-600">A</span>
-            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
-          </motion.div>
+          {/* Card Configs */}
+          {[
+            { rank: 'A', suit: '♥', color: 'text-red-500', bg: 'from-red-100 to-red-300', rot: -15, y: 12 },
+            { rank: 'T', suit: '♦', color: 'text-blue-500', bg: 'from-blue-100 to-blue-300', rot: -5, y: -4 },
+            { rank: 'T', suit: '♣', color: 'text-green-600', bg: 'from-green-100 to-green-300', rot: 5, y: -4 },
+            { rank: 'I', suit: '♠', color: 'text-gray-800', bg: 'from-gray-100 to-gray-300', rot: 15, y: 12 },
+          ].map((c, i) => (
+            <motion.div
+              key={i}
+              initial={{ rotate: 0, y: 50, x: -50 * i }}
+              animate={{ rotate: c.rot, y: c.y, x: 0 }}
+              whileHover={{ scale: 1.1, y: c.y - 20, zIndex: 50 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 * i }}
+              className={`relative -ml-8 md:-ml-12 w-20 h-32 md:w-28 md:h-44 text-xl md:text-2xl bg-gradient-to-br ${c.bg} border-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center cursor-pointer border-[4px] overflow-hidden`}
+              style={{ transformOrigin: 'bottom center', zIndex: i }}
+            >
+              {/* Central ellipse backdrop */}
+              <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
+              
+              {/* Central big suit symbol */}
+              <span className={`absolute z-10 font-normal drop-shadow-sm pb-3 md:pb-4 text-5xl md:text-7xl ${c.color}`}>
+                {c.suit}
+              </span>
 
-          {/* T - Diamonds */}
-          <motion.div
-            whileHover={{ scale: 1.1, rotateZ: 5 }}
-            transition={{ type: "spring", bounce: 0.5 }}
-            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
-          >
-            <Diamond className="w-6 h-6 text-blue-600 fill-blue-600" />
-            <span className="font-black text-3xl text-blue-600">T</span>
-            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
-          </motion.div>
+              {/* Gloss reflection overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent h-1/2 pointer-events-none z-20" />
 
-          {/* T - Clubs */}
-          <motion.div
-            whileHover={{ scale: 1.1, rotateZ: -5 }}
-            transition={{ type: "spring", bounce: 0.5 }}
-            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
-          >
-            <Club className="w-6 h-6 text-gray-800 fill-gray-800" />
-            <span className="font-black text-3xl text-gray-800">T</span>
-            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
-          </motion.div>
-
-          {/* I - Spades */}
-          <motion.div
-            whileHover={{ scale: 1.1, rotateZ: 5 }}
-            transition={{ type: "spring", bounce: 0.5 }}
-            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
-          >
-            <Spade className="w-6 h-6 text-green-700 fill-green-700" />
-            <span className="font-black text-3xl text-green-700">I</span>
-            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
-          </motion.div>
+              {/* Top Left Corner */}
+              <div className={`absolute z-20 text-center top-2 left-2 md:top-2 md:left-2 ${c.color}`}>
+                <div className="text-sm md:text-lg font-black leading-none drop-shadow-sm">{c.rank}</div>
+                <div className="text-xs md:text-base leading-none drop-shadow-sm">{c.suit}</div>
+              </div>
+              
+              {/* Bottom Right Corner */}
+              <div className={`absolute z-20 rotate-180 text-center bottom-2 right-2 md:bottom-2 md:right-2 ${c.color}`}>
+                <div className="text-sm md:text-lg font-black leading-none drop-shadow-sm">{c.rank}</div>
+                <div className="text-xs md:text-base leading-none drop-shadow-sm">{c.suit}</div>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Buttons Menu */}
