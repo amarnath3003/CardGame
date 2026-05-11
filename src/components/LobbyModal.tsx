@@ -63,36 +63,37 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
 
   return (
     <ModalShell title="Room Lobby" subtitle={`Room ${lobby.roomId}`} size="lg" onClose={onClose}>
-      <div className="space-y-6">
-        <div className="rounded-2xl border-2 border-white/30 bg-white/10 p-4">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">Share Link</p>
-              <div className="mt-2 rounded-2xl border-2 border-white/40 bg-white/5 px-4 py-2 font-semibold text-white/90">
-                {lobby.roomLink}
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/70 bg-white/15 px-4 py-2 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/25"
-            >
-              <Copy className="h-4 w-4" />
-              {copied ? 'Copied' : 'Copy'}
-            </button>
+      {/* Outer wrapper — tighter vertical rhythm in landscape */}
+      <div className="flex flex-col gap-2 landscape:gap-1.5 md:gap-4">
+
+        {/* ── Share link bar ── */}
+        <div className="flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 p-2 landscape:py-1.5 md:rounded-2xl md:p-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 shrink-0">Share</p>
+          <div className="truncate rounded-lg border border-white/40 bg-white/5 px-2 py-1 text-[10px] font-semibold text-white/90 flex-1 landscape:py-0.5">
+            {lobby.roomLink}
           </div>
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/70 bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/25 landscape:py-0.5"
+          >
+            <Copy className="h-3 w-3" />
+            {copied ? 'Copied' : 'Copy'}
+          </button>
         </div>
 
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-bold uppercase tracking-[0.28em] text-white/80">
+        {/* ── Players label — hidden in landscape to save vertical space ── */}
+        <div className="hidden landscape:hidden flex items-center justify-between md:flex">
+          <p className="text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-white/80">
             Players {playersJoined}/4
           </p>
-          <span className="rounded-full border border-white/40 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white/70">
+          <span className="rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[8px] md:text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
             {isOwner ? 'Host Controls' : 'Waiting'}
           </span>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        {/* ── 2×2 player grid ── */}
+        <div className="grid grid-cols-2 gap-1.5 landscape:gap-1 md:gap-3">
           {lobby.slots.map((slot) => {
             const isOwnerSlot = lobby.ownerIndex === slot.index;
             const isLocalPlayer = localPlayerId === slot.index;
@@ -102,7 +103,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
             return (
               <div
                 key={slot.index}
-                className={`flex flex-col gap-3 rounded-2xl border-2 p-4 ${
+                className={`flex flex-col gap-1.5 landscape:gap-1 md:gap-2 rounded-xl md:rounded-2xl border-2 p-2 landscape:p-1.5 md:p-3 ${
                   isLocalPlayer
                     ? 'border-green-400 bg-green-400/10'
                     : isOwnerSlot
@@ -110,65 +111,58 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     : 'border-white/30 bg-white/10'
                 }`}
               >
-                <div className="flex items-center gap-4">
+                {/* Avatar + name row */}
+                <div className="flex items-center gap-2 landscape:gap-1.5">
                   <AvatarBadge
                     avatarIndex={slot.avatarIndex ?? 0}
                     label={slot.type === 'empty' ? 'Open' : slot.name}
                     size="sm"
                     highlight={isOwnerSlot || isLocalPlayer}
                   />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-lg font-bold text-white">
-                        {slot.type === 'empty' ? 'Open Slot' : slot.name}
+                  <div className="flex-1 overflow-hidden">
+                    <div className="flex items-center gap-1 flex-wrap">
+                      <p className="truncate text-xs font-bold text-white">
+                        {slot.type === 'empty' ? 'Open' : slot.name}
                       </p>
                       {isLocalPlayer && (
-                        <span className="rounded-full bg-green-400 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#064e3b]">
+                        <span className="rounded-full bg-green-400 px-1.5 py-0 text-[9px] font-black uppercase tracking-[0.1em] text-[#064e3b]">
                           You
                         </span>
                       )}
-                      {isOwnerSlot && (
-                        <span className="rounded-full bg-yellow-300 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#1f2937]">
-                          Host
-                        </span>
-                      )}
                     </div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-white/60">
                       Slot {slot.index + 1}
                     </p>
                   </div>
                 </div>
 
+                {/* AI difficulty select */}
                 {isAi && (
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-[0.26em] text-white/70">
-                      AI Difficulty
-                    </label>
-                    <select
-                      value={slot.difficulty}
-                      onChange={(event) =>
-                        onUpdateDifficulty(slot.index, event.target.value as AiDifficulty)
-                      }
-                      disabled={!isOwner}
-                      className="rounded-xl border-2 border-white/30 bg-white/10 px-3 py-2 text-sm font-semibold text-white outline-none transition focus:border-yellow-200 disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                      {DIFFICULTIES.map((level) => (
-                        <option key={level} value={level} className="text-slate-900">
-                          {level}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <select
+                    value={slot.difficulty}
+                    onChange={(event) =>
+                      onUpdateDifficulty(slot.index, event.target.value as AiDifficulty)
+                    }
+                    disabled={!isOwner}
+                    className="w-full rounded-lg border border-white/30 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-white outline-none transition focus:border-yellow-200 disabled:cursor-not-allowed disabled:opacity-70 md:rounded-xl md:border-2 md:px-3 md:py-2 md:text-sm"
+                  >
+                    {DIFFICULTIES.map((level) => (
+                      <option key={level} value={level} className="text-slate-900">
+                        {level}
+                      </option>
+                    ))}
+                  </select>
                 )}
 
-                <div className="flex flex-wrap items-center gap-2">
+                {/* Action buttons */}
+                <div className="flex flex-wrap items-center gap-1">
                   {isEmpty && isOwner && (
                     <button
                       type="button"
                       onClick={() => onAddAi(slot.index)}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-white/70 bg-white/15 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/25"
+                      className="inline-flex items-center gap-1 rounded-full border border-white/70 bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/25 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
-                      <UserPlus className="h-4 w-4" />
+                      <UserPlus className="h-3 w-3" />
                       Add AI
                     </button>
                   )}
@@ -176,9 +170,9 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     <button
                       type="button"
                       onClick={() => onClearSlot(slot.index)}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-white/60 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
+                      className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/20 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
-                      <UserX className="h-4 w-4" />
+                      <UserX className="h-3 w-3" />
                       Remove AI
                     </button>
                   )}
@@ -186,15 +180,15 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     <button
                       type="button"
                       onClick={() => onClearSlot(slot.index)}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-white/60 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
+                      className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/20 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
-                      <UserX className="h-4 w-4" />
+                      <UserX className="h-3 w-3" />
                       Kick
                     </button>
                   )}
                   {isEmpty && !isOwner && (
-                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
-                      Waiting for player
+                    <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-white/50">
+                      Waiting...
                     </span>
                   )}
                 </div>
@@ -203,29 +197,35 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
           })}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-white/80">
+        {/* ── Footer ── */}
+        <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-1.5 landscape:pt-1 md:pt-4">
+          <p className="hidden text-sm font-semibold text-white/80 lg:block">
             Room status updates are shared locally.
           </p>
-          <div className="flex items-center gap-3">
+          {/* In landscape, show players count inline in footer */}
+          <p className="text-[10px] font-semibold text-white/60 landscape:block hidden md:hidden">
+            {playersJoined}/4 players
+          </p>
+          <div className="flex items-center gap-2 ml-auto">
             <button
               type="button"
               onClick={onLeave}
-              className="rounded-full border-2 border-white/70 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
+              className="rounded-full border border-white/70 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20 md:border-2 md:px-5 md:py-2 md:text-xs"
             >
-              Leave Room
+              Leave
             </button>
             {isOwner && (
               <button
                 type="button"
                 onClick={onStart}
-                className="rounded-full border-[3px] border-white bg-gradient-to-b from-[#22c55e] to-[#16a34a] px-6 py-2 text-sm font-black uppercase tracking-[0.2em] text-white shadow-[0_4px_0_#166534] transition hover:scale-[1.02] active:translate-y-[4px] active:shadow-none"
+                className="rounded-full border-2 border-white bg-gradient-to-b from-[#22c55e] to-[#16a34a] px-4 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-[0_2px_0_#166534] transition hover:scale-[1.02] active:translate-y-[2px] active:shadow-none md:border-[3px] md:px-8 md:py-2.5 md:text-sm md:shadow-[0_4px_0_#166534]"
               >
                 Start Game
               </button>
             )}
           </div>
         </div>
+
       </div>
     </ModalShell>
   );

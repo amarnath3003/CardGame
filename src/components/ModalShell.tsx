@@ -28,7 +28,7 @@ export const ModalShell: React.FC<ModalShellProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 px-2 py-2 landscape:py-1 md:px-4 md:py-6 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
@@ -36,35 +36,37 @@ export const ModalShell: React.FC<ModalShellProps> = ({
         animate={{ scale: 1, y: 0, rotateX: 0 }}
         exit={{ scale: 0.9, y: 30, opacity: 0 }}
         transition={{ type: 'spring', bounce: 0.35 }}
-        className={`relative w-full rounded-[2rem] border-[4px] border-white/70 bg-gradient-to-br from-[#1d4ed8] via-[#3b82f6] to-[#60a5fa] p-4 md:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] flex flex-col max-h-[90dvh] ${
+        className={`relative w-full rounded-[1.5rem] md:rounded-[2rem] border-[3px] md:border-[4px] border-white/70 bg-gradient-to-br from-[#1d4ed8] via-[#3b82f6] to-[#60a5fa] p-3 landscape:p-2.5 md:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] flex flex-col max-h-[96dvh] landscape:max-h-[98dvh] md:max-h-[90dvh] ${
           SIZE_CLASSES[size]
         }`}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-start justify-between gap-4 shrink-0 mb-4">
+        {/* Header — compact but legible in landscape */}
+        <div className="flex items-center justify-between gap-3 shrink-0 mb-2 landscape:mb-1.5 md:mb-4">
           <div>
             {subtitle && (
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/80">
+              <p className="text-[10px] landscape:text-[10px] md:text-xs font-bold uppercase tracking-[0.28em] text-white/80">
                 {subtitle}
               </p>
             )}
-            <h2 className="font-display text-2xl uppercase tracking-[0.08em] text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] md:text-3xl">
+            <h2 className="font-display text-2xl landscape:text-lg uppercase tracking-[0.08em] text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)] md:text-3xl leading-none">
               {title}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border-2 border-white/80 bg-white/10 p-2 text-white transition hover:bg-white/20 shrink-0"
+            className="rounded-full border-2 border-white/80 bg-white/10 p-1.5 text-white transition hover:bg-white/20 shrink-0"
             aria-label="Close"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="overflow-y-auto pr-2 custom-scrollbar flex-1 -mr-2">
-           {children}
+
+        <div className="overflow-y-auto custom-scrollbar flex-1">
+          {children}
         </div>
       </motion.div>
     </motion.div>
