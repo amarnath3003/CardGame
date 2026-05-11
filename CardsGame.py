@@ -41,6 +41,17 @@ def find_lead(hands):
         for card in player:
             if card[0] == 14 and card[1] == 3:
                 lead = player  # Ace of Spades
-                return hands.index(lead)  # Return the index of the player with the lead card
+                aceposition = player.index(card)  # Position of the Ace of Spades in the player's hand
+                return hands.index(lead),aceposition # Return the index of the player with the lead card
             
 print("lead: Player ", find_lead(hands))
+
+
+def middeck(hands,lead_index,aceposition):
+    middeck = []
+    print("Player ", lead_index, " can add Ace Spade (14,3) to middeck")
+    middeck.append(hands[lead_index].pop(aceposition))
+    print("Middeck: ", middeck)  # Assuming ChosenCardIndex is defined elsewhere
+    return middeck
+
+middeck(hands,find_lead(hands)[0],find_lead(hands)[1])
