@@ -18,9 +18,9 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
       return {
         card,
         id: `${card}-${cards.length - displayedCards.length + index}`,
-        rotation: centeredIndex * 4,
-        xOffset: centeredIndex * 1.5,
-        yOffset: -index * 3,
+        rotation: centeredIndex * 12,
+        xOffset: centeredIndex * 35,
+        yOffset: Math.abs(centeredIndex) * 8 - (index * 2),
       };
     });
   }, [cards]);
