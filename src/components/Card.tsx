@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { getCardRank, getCardSuit } from '../hooks/useCardGame';
+import { CardVisualSize } from '../types';
 
 const SUIT_SYMBOLS: { [key: string]: string } = {
   's': '♠', 'c': '♣', 'h': '♥', 'd': '♦',
@@ -25,9 +26,11 @@ interface CardProps {
   onClick?: () => void;
   isSelected?: boolean;
   isBack?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: CardVisualSize;
   rotation?: number;
   index?: number;
+  selectedLift?: number;
+  hoverLift?: number;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -38,8 +41,11 @@ export const Card: React.FC<CardProps> = ({
   size = 'md',
   rotation = 0,
   index = 0,
+  selectedLift = 25,
+  hoverLift = 20,
 }) => {
   const sizeClasses = {
+    xs: 'w-8 h-12 text-[10px] border-2 rounded-lg',
     sm: 'w-10 h-14 text-xs border-2 md:w-12 md:h-16',
     md: 'w-16 h-24 text-base border-[3px] md:w-20 md:h-32 md:text-lg',
     lg: 'w-20 h-32 text-xl border-[4px] md:w-28 md:h-44 md:text-2xl',
@@ -49,7 +55,7 @@ export const Card: React.FC<CardProps> = ({
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1, rotate: rotation, y: isSelected ? -20 : 0 }}
+        animate={{ opacity: 1, scale: 1, rotate: rotation, y: isSelected ? -selectedLift : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`${sizeClasses[size]} relative rounded-xl border-white shadow-[0_8px_16px_rgba(0,0,0,0.4)] cursor-pointer flex items-center justify-center overflow-hidden`}
         style={{
@@ -78,8 +84,8 @@ export const Card: React.FC<CardProps> = ({
     <motion.div
       layoutId={value}
       initial={{ opacity: 0, y: 50, scale: 0.5 }}
-      animate={{ opacity: 1, y: isSelected ? -25 : 0, scale: isSelected ? 1.05 : 1, rotate: rotation }}
-      whileHover={onClick ? { scale: 1.1, y: -20, zIndex: 50 } : {}}
+      animate={{ opacity: 1, y: isSelected ? -selectedLift : 0, scale: isSelected ? 1.05 : 1, rotate: rotation }}
+      whileHover={onClick ? { scale: 1.1, y: -hoverLift, zIndex: 50 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       onClick={onClick}
       className={`
@@ -96,23 +102,35 @@ export const Card: React.FC<CardProps> = ({
       <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
       
       {/* Central big suit symbol */}
-      <span className={`text-5xl md:text-7xl font-normal drop-shadow-sm absolute z-10 ${suitColor} pb-3 md:pb-4`}>
+      <span className={`absolute z-10 font-normal drop-shadow-sm ${suitColor} ${
+        size === 'xs'
+          ? 'pb-1 text-2xl'
+          : size === 'sm'
+            ? 'pb-2 text-3xl md:text-4xl'
+            : size === 'md'
+              ? 'pb-3 text-5xl md:text-6xl'
+              : 'pb-3 md:pb-4 text-5xl md:text-7xl'
+      }`}>
         {suitSymbol}
       </span>
-      
+
       {/* Gloss reflection overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent h-1/2 pointer-events-none z-20" />
 
       {/* Top Left Corner */}
-      <div className={`absolute top-2 left-2 text-center ${suitColor} z-20`}>
-        <div className="text-xs md:text-sm font-black leading-none drop-shadow-sm">{rank}</div>
-        <div className="text-xs md:text-sm leading-none drop-shadow-sm">{suitSymbol}</div>
+      <div className={`absolute z-20 text-center ${suitColor} ${
+        size === 'xs' ? 'top-1 left-1' : 'top-2 left-2'
+      }`}>
+        <div className={`${size === 'xs' ? 'text-[8px]' : 'text-xs md:text-sm'} font-black leading-none drop-shadow-sm`}>{rank}</div>
+        <div className={`${size === 'xs' ? 'text-[8px]' : 'text-xs md:text-sm'} leading-none drop-shadow-sm`}>{suitSymbol}</div>
       </div>
       
       {/* Bottom Right Corner */}
-      <div className={`absolute bottom-2 right-2 text-center ${suitColor} rotate-180 z-20`}>
-        <div className="text-xs md:text-sm font-black leading-none drop-shadow-sm">{rank}</div>
-        <div className="text-xs md:text-sm leading-none drop-shadow-sm">{suitSymbol}</div>
+      <div className={`absolute z-20 rotate-180 text-center ${suitColor} ${
+        size === 'xs' ? 'bottom-1 right-1' : 'bottom-2 right-2'
+      }`}>
+        <div className={`${size === 'xs' ? 'text-[8px]' : 'text-xs md:text-sm'} font-black leading-none drop-shadow-sm`}>{rank}</div>
+        <div className={`${size === 'xs' ? 'text-[8px]' : 'text-xs md:text-sm'} leading-none drop-shadow-sm`}>{suitSymbol}</div>
       </div>
     </motion.div>
   );

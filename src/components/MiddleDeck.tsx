@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from './Card';
+import { LayoutMetrics } from '../types';
 
 interface MiddleDeckProps {
   cards: string[];
+  layout: LayoutMetrics;
 }
 
-export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
+export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
   const visibleCards = useMemo(() => {
     const displayedCards = cards.slice(-5);
 
@@ -23,16 +25,34 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
     });
   }, [cards]);
 
+  const compact = layout.isCompactLandscape;
+  const deckSize = compact ? 'md' : 'lg';
+  const pileLabelClass = compact
+    ? 'absolute -bottom-8 rounded-full border-2 border-white/40 bg-gray-900/82 px-3 py-1 text-xs font-black tracking-[0.18em] text-white shadow-[0_0_12px_rgba(255,255,255,0.18)] backdrop-blur-md'
+    : 'absolute -bottom-9 md:-bottom-12 rounded-full border-[3px] border-white/40 bg-gray-900/80 px-4 py-1.5 md:px-5 md:py-2 text-sm font-black tracking-widest text-white shadow-[0_0_15px_rgba(255,255,255,0.2)] backdrop-blur-md md:text-lg';
+
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center pointer-events-none" style={{ width: 'clamp(180px, 32vw, 320px)', height: 'clamp(220px, 40vw, 360px)' }}>
+    <div
+      className={`absolute left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center pointer-events-none ${
+        compact ? 'top-[43%]' : 'top-1/2'
+      }`}
+      style={{
+        width: compact ? 'clamp(148px, 26vw, 220px)' : 'clamp(180px, 32vw, 320px)',
+        height: compact ? 'clamp(150px, 24vw, 210px)' : 'clamp(220px, 40vw, 360px)',
+      }}
+    >
       
       {/* Mystical Drop Zone Background */}
       <motion.div 
         animate={{ rotate: 360, scale: [1, 1.05, 1] }} 
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-dashed border-white/20 bg-black/5"
+        className={`absolute rounded-full border-dashed border-white/20 bg-black/5 ${
+          compact ? 'h-24 w-24 border-[3px]' : 'h-36 w-36 border-4 md:h-56 md:w-56'
+        }`}
       />
-      <div className="absolute w-28 h-28 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 blur-xl" />
+      <div className={`absolute rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 ${
+        compact ? 'h-20 w-20 blur-lg' : 'h-28 w-28 blur-xl md:h-40 md:w-40'
+      }`} />
       
       <div className="relative w-full h-full flex items-center justify-center">
         <AnimatePresence>
@@ -52,7 +72,7 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="absolute drop-shadow-2xl"
             >
-              <Card value={card} size="lg" />
+              <Card value={card} size={deckSize} selectedLift={compact ? 10 : 25} hoverLift={compact ? 8 : 20} />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -62,10 +82,10 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute -bottom-9 md:-bottom-12 bg-gray-900/80 backdrop-blur-md rounded-full px-4 md:px-5 py-1.5 md:py-2 border-[3px] border-white/40 shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-2"
+          className={`${pileLabelClass} flex items-center gap-2`}
         >
-          <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse" />
-          <p className="text-white font-black text-sm md:text-lg tracking-widest leading-none pt-1">
+          <div className={`${compact ? 'h-2.5 w-2.5' : 'h-3 w-3'} rounded-full bg-green-400 animate-pulse`} />
+          <p className={`leading-none ${compact ? 'pt-0.5' : 'pt-1'}`}>
             PILE: {cards.length}
           </p>
         </motion.div>

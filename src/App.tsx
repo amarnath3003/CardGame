@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useCardGame } from './hooks/useCardGame';
 import { PlayerHand } from './components/PlayerHand';
 import { MiddleDeck } from './components/MiddleDeck';
 import { RoundOverModal } from './components/RoundOverModal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, Play } from 'lucide-react';
+import { LayoutMetrics } from './types';
 
 export default function App() {
   const { gameState, selectCard, placeCard, aiPlay, nextRound, restart } = useCardGame();
@@ -23,7 +24,17 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isLandscape = viewport.width > viewport.height;
+  const layout = useMemo<LayoutMetrics>(() => {
+    const isLandscape = viewport.width > viewport.height;
+    const isCompactLandscape = isLandscape && viewport.height <= 430;
+
+    return {
+      mode: isCompactLandscape ? 'compactLandscape' : 'default',
+      viewportWidth: viewport.width,
+      viewportHeight: viewport.height,
+      isCompactLandscape,
+    };
+  }, [viewport.height, viewport.width]);
 
   // AI turn timer
   useEffect(() => {
@@ -46,29 +57,47 @@ export default function App() {
   ];
 
   return (
-    <div className={`game-root ${isLandscape ? 'landscape-tight' : ''} min-h-[100dvh] w-full relative overflow-hidden bg-gradient-to-b from-[#1a8cff] via-[#4dd2ff] to-[#aadd00]`}>
+    <div className={`game-root ${layout.isCompactLandscape ? 'compact-landscape' : ''} min-h-[100dvh] w-full relative overflow-hidden bg-gradient-to-b from-[#1a8cff] via-[#4dd2ff] to-[#aadd00]`}>
       {/* Decorative planet / world base */}
-      <div className="absolute -bottom-[60vh] left-1/2 -translate-x-1/2 w-[200vw] h-[120vh] bg-gradient-to-b from-[#88e633] to-[#44aa00] rounded-[100%] border-t-[12px] border-[#aaff55]/50 shadow-[inset_0_40px_80px_rgba(0,100,0,0.4)] pointer-events-none" />
+      <div className={`absolute left-1/2 -translate-x-1/2 rounded-[100%] border-[#aaff55]/50 bg-gradient-to-b from-[#88e633] to-[#44aa00] shadow-[inset_0_40px_80px_rgba(0,100,0,0.4)] pointer-events-none ${
+        layout.isCompactLandscape
+          ? '-bottom-[70vh] h-[125vh] w-[220vw] border-t-[10px]'
+          : '-bottom-[60vh] h-[120vh] w-[200vw] border-t-[12px]'
+      }`} />
       
       {/* Dynamic Clouds */}
-      <motion.div animate={{ x: [-100, viewport.width + 100] }} transition={{ duration: 60, repeat: Infinity, ease: 'linear' }} className="absolute top-10 md:top-20 left-0 w-36 h-12 md:w-48 md:h-16 bg-white/40 rounded-full blur-md pointer-events-none" />
-      <motion.div animate={{ x: [-200, viewport.width + 200] }} transition={{ duration: 80, repeat: Infinity, ease: 'linear', delay: 10 }} className="absolute top-24 md:top-40 right-0 w-48 h-14 md:w-64 md:h-20 bg-white/30 rounded-full blur-xl pointer-events-none" />
+      <motion.div animate={{ x: [-100, viewport.width + 100] }} transition={{ duration: 60, repeat: Infinity, ease: 'linear' }} className={`absolute left-0 rounded-full bg-white/40 blur-md pointer-events-none ${
+        layout.isCompactLandscape ? 'top-6 h-8 w-24' : 'top-10 h-12 w-36 md:top-20 md:h-16 md:w-48'
+      }`} />
+      <motion.div animate={{ x: [-200, viewport.width + 200] }} transition={{ duration: 80, repeat: Infinity, ease: 'linear', delay: 10 }} className={`absolute right-0 rounded-full bg-white/30 pointer-events-none ${
+        layout.isCompactLandscape ? 'top-12 h-9 w-32 blur-lg' : 'top-24 h-14 w-48 blur-xl md:top-40 md:h-20 md:w-64'
+      }`} />
 
       {/* Header Info */}
-      <div className="game-header absolute top-3 left-3 md:top-6 md:left-6 z-30 bg-white/20 backdrop-blur-md px-4 py-2 md:px-6 md:py-3 rounded-full border-2 border-white/50 shadow-[0_8px_16px_rgba(0,0,0,0.2)] flex items-center gap-3 md:gap-4">
-        <h1 className="text-2xl md:text-3xl font-black text-white italic tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">CARD GAME</h1>
-        <div className="h-8 w-[2px] bg-white/30" />
-        <p className="text-base md:text-xl font-bold text-yellow-300 drop-shadow-md">ROUND {gameState.turnCounter + 1}</p>
+      <div className={`game-header absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
+        layout.isCompactLandscape ? 'gap-2 px-3 py-1.5' : 'gap-3 px-4 py-2 md:gap-4 md:px-6 md:py-3'
+      }`}>
+        <h1 className={`font-black italic text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] ${
+          layout.isCompactLandscape ? 'text-lg tracking-[0.18em]' : 'text-2xl tracking-wider md:text-3xl'
+        }`}>CARD GAME</h1>
+        <div className={`${layout.isCompactLandscape ? 'h-6' : 'h-8'} w-[2px] bg-white/30`} />
+        <p className={`font-bold text-yellow-300 drop-shadow-md ${layout.isCompactLandscape ? 'text-sm' : 'text-base md:text-xl'}`}>
+          ROUND {gameState.turnCounter + 1}
+        </p>
       </div>
 
       {/* Settings / Restart (Top Right) */}
-      <div className="game-restart absolute top-3 right-3 md:top-6 md:right-6 z-30">
+      <div className="game-restart absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30">
         <button
           onClick={restart}
-          className="bg-gradient-to-b from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white p-3 md:p-4 rounded-full shadow-[0_6px_0_#990000,0_10px_20px_rgba(0,0,0,0.3)] active:shadow-[0_0px_0_#990000,0_5px_10px_rgba(0,0,0,0.3)] active:translate-y-[6px] transition-all border-2 border-white"
+          className={`rounded-full border-2 border-white bg-gradient-to-b from-red-500 to-red-600 text-white transition-all hover:from-red-400 hover:to-red-500 active:translate-y-[6px] active:shadow-[0_0px_0_#990000,0_5px_10px_rgba(0,0,0,0.3)] ${
+            layout.isCompactLandscape
+              ? 'p-2.5 shadow-[0_5px_0_#990000,0_8px_16px_rgba(0,0,0,0.28)]'
+              : 'p-3 shadow-[0_6px_0_#990000,0_10px_20px_rgba(0,0,0,0.3)] md:p-4'
+          }`}
           title="Restart Game"
         >
-          <RotateCcw strokeWidth={3} size={20} className="md:w-6 md:h-6" />
+          <RotateCcw strokeWidth={3} size={layout.isCompactLandscape ? 18 : 20} className="md:w-6 md:h-6" />
         </button>
       </div>
 
@@ -79,18 +108,26 @@ export default function App() {
             initial={{ opacity: 0, y: 50, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.8 }}
-            className="play-button absolute bottom-28 md:bottom-56 left-1/2 transform -translate-x-1/2 z-50"
+            className={`play-button absolute z-50 ${
+              layout.isCompactLandscape
+                ? 'bottom-[calc(4.9rem+var(--safe-bottom))] right-[calc(0.75rem+var(--safe-right))]'
+                : 'bottom-28 left-1/2 -translate-x-1/2 md:bottom-56'
+            }`}
           >
             <button
               onClick={placeCard}
-              className="group relative bg-gradient-to-b from-yellow-400 to-orange-500 text-white font-black text-2xl md:text-3xl py-3 md:py-4 px-8 md:px-12 rounded-full shadow-[0_8px_0_#b35900,0_15px_30px_rgba(0,0,0,0.4)] border-[4px] border-white active:shadow-[0_0px_0_#b35900,0_5px_10px_rgba(0,0,0,0.4)] active:translate-y-[8px] transition-all hover:scale-110 flex items-center gap-3"
+              className={`group relative flex items-center rounded-full border-white bg-gradient-to-b from-yellow-400 to-orange-500 font-black text-white transition-all hover:scale-110 active:translate-y-[8px] active:shadow-[0_0px_0_#b35900,0_5px_10px_rgba(0,0,0,0.4)] ${
+                layout.isCompactLandscape
+                  ? 'gap-2 border-[3px] px-5 py-2.5 text-lg shadow-[0_6px_0_#b35900,0_12px_20px_rgba(0,0,0,0.35)]'
+                  : 'gap-3 border-[4px] px-8 py-3 text-2xl shadow-[0_8px_0_#b35900,0_15px_30px_rgba(0,0,0,0.4)] md:px-12 md:py-4 md:text-3xl'
+              }`}
             >
               <span>PLAY</span>
-              <Play className="w-8 h-8 fill-current group-hover:scale-125 transition-transform" />
+              <Play className={`${layout.isCompactLandscape ? 'h-5 w-5' : 'h-8 w-8'} fill-current transition-transform group-hover:scale-125`} />
               
               {/* Shine effect */}
               <div className="absolute inset-0 w-full h-full overflow-hidden rounded-full rounded-b-none pointer-events-none">
-                <div className="absolute w-[200%] h-[50%] bg-white/30 top-0 left-[-50%] transform -rotate-12 translate-y-[-50%]" />
+                <div className="absolute left-[-50%] top-0 h-[50%] w-[200%] -rotate-12 translate-y-[-50%] bg-white/30" />
               </div>
             </button>
           </motion.div>
@@ -108,11 +145,12 @@ export default function App() {
           isHuman={gameState.players[index].isHuman}
           selectedCardIdx={gameState.selectedCardIdx}
           onCardSelect={(idx) => selectCard(idx)}
+          layout={layout}
         />
       ))}
 
       {/* Middle Deck */}
-      <MiddleDeck cards={gameState.middleDeck} />
+      <MiddleDeck cards={gameState.middleDeck} layout={layout} />
 
       {/* Round Over Modal */}
       <AnimatePresence>
@@ -121,6 +159,7 @@ export default function App() {
             winnerName={gameState.players[gameState.roundWinner].name}
             highestCard={gameState.highestCard || 'Unknown'}
             onContinue={nextRound}
+            layout={layout}
           />
         )}
       </AnimatePresence>

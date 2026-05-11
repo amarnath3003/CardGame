@@ -1,4 +1,6 @@
 export type GameStatus = 'PLAYING' | 'ROUND_OVER' | 'GAME_OVER';
+export type LayoutMode = 'default' | 'compactLandscape';
+export type CardVisualSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface Card {
   value: string;
@@ -23,4 +25,11 @@ export interface GameState {
   selectedCardIdx: number | null;
   roundWinner: number | null;
   highestCard: string | null;
+}
+
+export interface LayoutMetrics {
+  mode: LayoutMode;
+  viewportWidth: number;
+  viewportHeight: number;
+  isCompactLandscape: boolean;
 }
