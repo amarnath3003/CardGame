@@ -88,10 +88,7 @@ export default function App() {
         difficulty: playAiDifficulty,
       };
     }
-    hostCreateLobby(roomId, createLobby(roomId, slots, 0));
-    setTimeout(() => {
-      startGame();
-    }, 100);
+    hostCreateLobby(roomId, createLobby(roomId, slots, 0), true);
   };
 
   const handleCreateRoom = () => {

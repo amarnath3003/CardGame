@@ -17,7 +17,7 @@ interface MultiplayerContextValue {
   localPlayerId: number;
   lobbyState: LobbyState | null;
   gameState: GameState | null;
-  hostCreateLobby: (roomId: string, lobby: LobbyState) => void;
+  hostCreateLobby: (roomId: string, lobby: LobbyState, autoStart?: boolean) => void;
   clientJoinLobby: (roomId: string, profile: Profile) => Promise<void>;
   leaveLobby: () => void;
   updateLobbySlot: (lobby: LobbyState) => void; // Host only
@@ -79,7 +79,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     broadcast({ type: 'GAME_STATE_UPDATE', gameState: state });
   };
 
-  const hostCreateLobby = (roomId: string, initialLobby: LobbyState) => {
+  const hostCreateLobby = (roomId: string, initialLobby: LobbyState, autoStart: boolean = false) => {
     cleanup();
     setIsHost(true);
     setLobbyState(initialLobby);
@@ -90,6 +90,19 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     peer.on('open', (id) => {
       setPeerId(id);
     });
+
+    if (autoStart) {
+      const names = initialLobby.slots.map(s => s.type === 'empty' ? 'AI Bot' : s.name);
+      hostEngineRef.current = new GameEngine(names);
+      const initialGameState = hostEngineRef.current.initializeGame();
+      
+      initialGameState.players.forEach((p, idx) => {
+        p.isHuman = initialLobby.slots[idx].type === 'human';
+      });
+
+      setGameState(initialGameState);
+      // No need to broadcast as peer isn't connected to anyone yet
+    }
 
     peer.on('connection', (conn) => {
       connectionsRef.current.set(conn.peer, conn);

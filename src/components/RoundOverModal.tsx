@@ -11,6 +11,7 @@ interface RoundOverModalProps {
   buttonLabel: string;
   outcome?: RoundOutcome | 'GAME_OVER';
   onContinue: () => void;
+  onExit?: () => void;
   layout: LayoutMetrics;
 }
 
@@ -22,6 +23,7 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
   buttonLabel,
   outcome = 'NORMAL',
   onContinue,
+  onExit,
   layout,
 }) => {
   const compact = layout.isCompactLandscape;
@@ -97,18 +99,33 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
           </div>
         </div>
 
-        {buttonLabel && (
-          <button
-            onClick={onContinue}
-            className={`rounded-full border-white bg-gradient-to-b ${buttonGradient} font-black text-white transition-all hover:scale-105 active:translate-y-[8px] active:shadow-[0_0px_0_#1a73e8,0_5px_10px_rgba(0,0,0,0.4)] ${
-              compact
-                ? 'border-2 px-7 py-3 text-lg shadow-[0_6px_0_#1a73e8,0_12px_18px_rgba(0,0,0,0.35)]'
-                : 'border-[3px] px-12 py-4 text-2xl shadow-[0_8px_0_#1a73e8,0_15px_20px_rgba(0,0,0,0.4)]'
-            }`}
-          >
-            {buttonLabel}
-          </button>
-        )}
+        <div className={`flex flex-col gap-3 ${compact ? 'mt-auto' : 'mt-4'}`}>
+          {buttonLabel && (
+            <button
+              onClick={onContinue}
+              className={`rounded-full border-white bg-gradient-to-b ${buttonGradient} font-black text-white transition-all hover:scale-105 active:translate-y-[8px] active:shadow-[0_0px_0_#1a73e8,0_5px_10px_rgba(0,0,0,0.4)] ${
+                compact
+                  ? 'border-2 px-7 py-3 text-lg shadow-[0_6px_0_#1a73e8,0_12px_18px_rgba(0,0,0,0.35)]'
+                  : 'border-[3px] px-12 py-4 text-2xl shadow-[0_8px_0_#1a73e8,0_15px_20px_rgba(0,0,0,0.4)]'
+              }`}
+            >
+              {buttonLabel}
+            </button>
+          )}
+
+          {onExit && (
+            <button
+              onClick={onExit}
+              className={`rounded-full border-white bg-white/10 font-black text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105 active:translate-y-[4px] ${
+                compact
+                  ? 'border-2 px-5 py-2 text-sm uppercase tracking-widest'
+                  : 'border-[3px] px-10 py-3 text-lg uppercase tracking-[0.2em] md:text-xl'
+              }`}
+            >
+              LEAVE GAME
+            </button>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   );

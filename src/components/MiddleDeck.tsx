@@ -27,9 +27,7 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
 
   const compact = layout.isCompactLandscape;
   const deckSize = compact ? 'md' : 'lg';
-  const pileLabelClass = compact
-    ? 'absolute -bottom-8 rounded-full border-2 border-white/40 bg-gray-900/82 px-3 py-1 text-xs font-black tracking-[0.18em] text-white shadow-[0_0_12px_rgba(255,255,255,0.18)] backdrop-blur-md'
-    : 'absolute -bottom-9 md:-bottom-12 rounded-full border-[3px] border-white/40 bg-gray-900/80 px-4 py-1.5 md:px-5 md:py-2 text-sm font-black tracking-widest text-white shadow-[0_0_15px_rgba(255,255,255,0.2)] backdrop-blur-md md:text-lg';
+
 
   return (
     <div
@@ -78,18 +76,7 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
         </AnimatePresence>
       </div>
       
-      {cards.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`${pileLabelClass} flex items-center gap-2`}
-        >
-          <div className={`${compact ? 'h-2.5 w-2.5' : 'h-3 w-3'} rounded-full bg-green-400 animate-pulse`} />
-          <p className={`leading-none ${compact ? 'pt-0.5' : 'pt-1'}`}>
-            PILE: {cards.length}
-          </p>
-        </motion.div>
-      )}
+
     </div>
   );
 };

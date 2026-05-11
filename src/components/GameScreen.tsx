@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { Play, LogOut } from 'lucide-react';
 import { useCardGame } from '../hooks/useCardGame';
+import { useMultiplayer } from '../contexts/MultiplayerContext';
 import { PlayerHand } from './PlayerHand';
 import { MiddleDeck } from './MiddleDeck';
 import { RoundOverModal } from './RoundOverModal';
@@ -9,6 +10,8 @@ import { LayoutMetrics } from '../types';
 
 export const GameScreen: React.FC = () => {
   const { gameState, selectCard, placeCard, aiPlay, nextRound, localPlayerId } = useCardGame();
+  const { leaveLobby } = useMultiplayer();
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -83,6 +86,22 @@ export const GameScreen: React.FC = () => {
           layout.isCompactLandscape ? 'top-12 h-9 w-32 blur-lg' : 'top-24 h-14 w-48 blur-xl md:top-40 md:h-20 md:w-64'
         }`}
       />
+
+      {/* Exit Button - Global */}
+      <div className={`absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-40`}>
+        <button
+          onClick={() => setShowExitConfirm(true)}
+          className={`group flex items-center justify-center rounded-full border-2 border-white/40 bg-black/20 text-white backdrop-blur-md transition-all hover:bg-red-500/40 hover:border-red-400/60 ${
+            layout.isCompactLandscape ? 'p-2' : 'p-3 md:p-4'
+          }`}
+          title="Leave Game"
+        >
+          <LogOut className={`${layout.isCompactLandscape ? 'h-5 w-5' : 'h-6 w-6 md:h-8 md:w-8'} transition-transform group-hover:-translate-x-1`} />
+          {!layout.isCompactLandscape && (
+            <span className="ml-2 hidden text-sm font-black tracking-widest md:block">EXIT</span>
+          )}
+        </button>
+      </div>
 
       <div
         className={`game-header absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
@@ -183,8 +202,46 @@ export const GameScreen: React.FC = () => {
             buttonLabel=""
             outcome="GAME_OVER"
             onContinue={() => {}}
+            onExit={leaveLobby}
             layout={layout}
           />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="w-full max-w-sm rounded-[2rem] border-4 border-white/20 bg-gray-900 p-8 text-center shadow-2xl"
+            >
+              <h2 className="mb-4 text-3xl font-black text-white uppercase tracking-tight">Leave Match?</h2>
+              <p className="mb-8 text-lg font-medium text-gray-400">
+                Are you sure you want to quit? Your progress in this round will be lost.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={leaveLobby}
+                  className="w-full rounded-full bg-red-500 py-4 text-xl font-black text-white transition-all hover:bg-red-600 active:scale-95"
+                >
+                  YES, LEAVE
+                </button>
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="w-full rounded-full bg-white/10 py-3 text-lg font-bold text-white transition-all hover:bg-white/20"
+                >
+                  CANCEL
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
