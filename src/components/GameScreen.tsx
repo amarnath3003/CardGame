@@ -86,17 +86,9 @@ export const GameScreen: React.FC = () => {
 
       <div
         className={`game-header absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
-          layout.isCompactLandscape ? 'gap-2 px-3 py-1.5' : 'gap-3 px-4 py-2 md:gap-4 md:px-6 md:py-3'
+          layout.isCompactLandscape ? 'px-4 py-1.5' : 'px-6 py-2 md:py-3'
         }`}
       >
-        <h1
-          className={`font-black italic text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] ${
-            layout.isCompactLandscape ? 'text-lg tracking-[0.18em]' : 'text-2xl tracking-wider md:text-3xl'
-          }`}
-        >
-          CARD GAME
-        </h1>
-        <div className={`${layout.isCompactLandscape ? 'h-6' : 'h-8'} w-[2px] bg-white/30`} />
         <p className={`font-bold text-yellow-300 drop-shadow-md ${layout.isCompactLandscape ? 'text-sm' : 'text-base md:text-xl'}`}>
           ROUND {gameState.roundNumber}
         </p>
