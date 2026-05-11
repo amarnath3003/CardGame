@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Rubik:wght@400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,9 +10,33 @@
   box-sizing: border-box;
 }
 
+:root {
+  --font-display: 'Luckiest Guy', 'Trebuchet MS', sans-serif;
+  --font-body: 'Rubik', 'Segoe UI', sans-serif;
+  --home-sky-1: #6fb6ff;
+  --home-sky-2: #3b82f6;
+  --home-sky-3: #2b4aa6;
+  --home-grid: rgba(255, 255, 255, 0.12);
+}
+
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body);
   overflow: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.home-root {
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.18), transparent 40%),
+    radial-gradient(circle at 82% 4%, rgba(255, 255, 255, 0.12), transparent 38%),
+    linear-gradient(180deg, var(--home-sky-1) 0%, var(--home-sky-2) 55%, var(--home-sky-3) 100%),
+    linear-gradient(var(--home-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--home-grid) 1px, transparent 1px);
+  background-size: auto, auto, auto, 70px 70px, 70px 70px;
+  background-position: top left, top right, top left, top left, top left;
 }
 
 .game-root {

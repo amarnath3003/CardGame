@@ -95,3 +95,26 @@ export interface LayoutMetrics {
   viewportHeight: number;
   isCompactLandscape: boolean;
 }
+
+export type AiDifficulty = 'Easy' | 'Normal' | 'Hard';
+export type LobbySlotType = 'human' | 'ai' | 'empty';
+
+export interface Profile {
+  name: string;
+  avatarIndex: number;
+}
+
+export interface LobbySlot {
+  index: number;
+  type: LobbySlotType;
+  name: string;
+  avatarIndex: number | null;
+  difficulty?: AiDifficulty;
+}
+
+export interface LobbyState {
+  roomId: string;
+  roomLink: string;
+  ownerIndex: number;
+  slots: LobbySlot[];
+}
