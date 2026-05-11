@@ -33,3 +33,14 @@ def shuffle_deck(deck):
     return deck
 
 shuffle_deck(deck)
+
+hands = [Player1, Player2, Player3, Player4]
+
+def find_lead(hands):
+    for player in hands:
+        for card in player:
+            if card[0] == 14 and card[1] == 3:
+                lead = player  # Ace of Spades
+                return hands.index(lead)  # Return the index of the player with the lead card
+            
+print("lead: Player ", find_lead(hands))
