@@ -151,11 +151,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           >
             {/* Card Configs */}
             {[
-              { rank: 'A', suit: '♥', color: 'text-red-500', bg: 'from-red-100 to-red-300', rot: -15, y: 12 },
-              { rank: 'T', suit: '♦', color: 'text-blue-500', bg: 'from-blue-100 to-blue-300', rot: -5, y: -4 },
-              { rank: 'T', suit: '♣', color: 'text-green-600', bg: 'from-green-100 to-green-300', rot: 5, y: -4 },
-              { rank: 'I', suit: '♠', color: 'text-gray-800', bg: 'from-gray-100 to-gray-300', rot: 15, y: 12 },
-            ].map((c, i) => (
+              { rank: 'A', suit: 'h', icon: Heart, color: 'text-red-500', bg: 'from-red-100 to-red-300', rot: -15, y: 12 },
+              { rank: 'T', suit: 'd', icon: Diamond, color: 'text-blue-500', bg: 'from-blue-100 to-blue-300', rot: -5, y: -4 },
+              { rank: 'T', suit: 'c', icon: Club, color: 'text-green-600', bg: 'from-green-100 to-green-300', rot: 5, y: -4 },
+              { rank: 'I', suit: 's', icon: Spade, color: 'text-gray-800', bg: 'from-gray-100 to-gray-300', rot: 15, y: 12 },
+            ].map((c, i) => {
+              const Icon = c.icon;
+              return (
               <motion.div
                 key={i}
                 initial={{ rotate: 0, y: 50, x: -50 * i }}
@@ -169,9 +171,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
                 
                 {/* Central big suit symbol */}
-                <span className={`absolute z-10 font-normal drop-shadow-sm pb-3 md:pb-4 text-5xl md:text-7xl ${c.color}`}>
-                  {c.suit}
-                </span>
+                <div className={`absolute z-10 drop-shadow-md pb-3 md:pb-4 ${c.color}`}>
+                  <Icon className="w-12 h-12 md:w-16 md:h-16 fill-current" />
+                </div>
 
                 {/* Gloss reflection overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent h-1/2 pointer-events-none z-20" />
@@ -179,16 +181,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 {/* Top Left Corner */}
                 <div className={`absolute z-20 text-center top-2 left-2 md:top-2 md:left-2 ${c.color}`}>
                   <div className="text-sm md:text-lg font-black leading-none drop-shadow-sm">{c.rank}</div>
-                  <div className="text-xs md:text-base leading-none drop-shadow-sm">{c.suit}</div>
+                  <div className="flex justify-center mt-0.5">
+                    <Icon className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                  </div>
                 </div>
                 
                 {/* Bottom Right Corner */}
                 <div className={`absolute z-20 rotate-180 text-center bottom-2 right-2 md:bottom-2 md:right-2 ${c.color}`}>
                   <div className="text-sm md:text-lg font-black leading-none drop-shadow-sm">{c.rank}</div>
-                  <div className="text-xs md:text-base leading-none drop-shadow-sm">{c.suit}</div>
+                  <div className="flex justify-center mt-0.5">
+                    <Icon className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                  </div>
                 </div>
               </motion.div>
-            ))}
+            );
+            })}
           </motion.div>
         </div>
 

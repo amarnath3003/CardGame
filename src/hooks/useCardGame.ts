@@ -24,6 +24,31 @@ export const getCardSuit = (card: string): string => card[card.length - 1];
 
 export const getCardPriority = (card: string): number => CARD_RANK_PRIORITY[getCardRank(card)] || 0;
 
+const SUIT_NAMES: Record<string, string> = {
+  s: 'Spades',
+  c: 'Clubs',
+  h: 'Hearts',
+  d: 'Diamonds',
+};
+
+const RANK_NAMES: Record<string, string> = {
+  A: 'Ace',
+  K: 'King',
+  Q: 'Queen',
+  J: 'Jack',
+};
+
+export const formatCardName = (card: string): string => {
+  if (!card || card === 'Unknown') return card;
+  const rank = getCardRank(card);
+  const suit = getCardSuit(card);
+  
+  const rankName = RANK_NAMES[rank] || rank;
+  const suitName = SUIT_NAMES[suit] || suit;
+  
+  return `${rankName} of ${suitName}`;
+};
+
 export const useCardGame = () => {
   const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound } = useMultiplayer();
   const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null);

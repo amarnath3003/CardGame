@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, LogOut } from 'lucide-react';
-import { useCardGame } from '../hooks/useCardGame';
+import { useCardGame, formatCardName } from '../hooks/useCardGame';
 import { useMultiplayer } from '../contexts/MultiplayerContext';
 import { PlayerHand } from './PlayerHand';
 import { MiddleDeck } from './MiddleDeck';
@@ -177,13 +177,9 @@ export const GameScreen: React.FC = () => {
                 ? `${gameState.players[gameState.roundWinner].name} TAKES THE PILE`
                 : `${gameState.players[gameState.roundWinner].name} WINS THE ROUND`
             }
-            message={
-              gameState.roundOutcome === 'CUT'
-                ? `${gameState.players[gameState.roundWinner].name} held the highest pre-cut card and is punished with the pile.`
-                : `${gameState.players[gameState.roundWinner].name} played the top card of the trick and leads again.`
-            }
-            detailLabel={gameState.roundOutcome === 'CUT' ? 'Punishment Trigger' : 'Winning Card'}
-            detailValue={gameState.roundOutcome === 'CUT' ? gameState.cutCard || 'Unknown' : gameState.highestCard || 'Unknown'}
+            message={gameState.message}
+            detailLabel={gameState.roundOutcome === 'CUT' ? "CUT CARD" : "HIGHEST CARD"}
+            detailValue={formatCardName(gameState.roundOutcome === 'CUT' ? gameState.cutCard || 'Unknown' : gameState.highestCard || 'Unknown')}
             buttonLabel={localPlayerId === 0 ? "NEXT ROUND" : "WAITING FOR HOST..."}
             outcome={gameState.roundOutcome || 'NORMAL'}
             onContinue={localPlayerId === 0 ? nextRound : () => {}}
