@@ -41,6 +41,67 @@ const getAvatarIcon = (position: string, compact = false) => {
   }
 };
 
+const TimerHighlight: React.FC<{ compact?: boolean }> = ({ compact }) => {
+  const pathData = "M 50 5 L 25 5 A 20 20 0 0 0 5 25 L 5 75 A 20 20 0 0 0 25 95 L 75 95 A 20 20 0 0 0 95 75 L 95 25 A 20 20 0 0 0 75 5 Z";
+  
+  return (
+    <svg 
+      className="absolute inset-0 h-full w-full pointer-events-none z-10" 
+      viewBox="0 0 100 100" 
+      style={{ 
+        overflow: 'visible', 
+        transform: compact ? 'scale(1.35)' : 'scale(1.25)' 
+      }}
+    >
+      {/* Background Track for the timer */}
+      <path
+        d={pathData}
+        fill="none"
+        stroke="rgba(0,0,0,0.1)"
+        strokeWidth={compact ? "9" : "7"}
+        strokeLinecap="round"
+      />
+      
+      {/* Outer Glow Path (pulsing) */}
+      <motion.path
+        d={pathData}
+        fill="none"
+        strokeWidth={compact ? "14" : "12"}
+        strokeLinecap="round"
+        initial={{ pathLength: 1, stroke: "#4ade80", opacity: 0.4 }}
+        animate={{ 
+          pathLength: 0,
+          stroke: ["#4ade80", "#facc15", "#ef4444"],
+          opacity: [0.4, 0.7, 0.4]
+        }}
+        transition={{ 
+          pathLength: { duration: 15, ease: "linear" },
+          stroke: { duration: 15, ease: "linear" },
+          opacity: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+        }}
+        style={{ filter: 'blur(5px)' }}
+      />
+
+      {/* Main Animated Path */}
+      <motion.path
+        d={pathData}
+        fill="none"
+        strokeWidth={compact ? "8" : "6"}
+        strokeLinecap="round"
+        initial={{ pathLength: 1, stroke: "#4ade80" }}
+        animate={{ 
+          pathLength: 0,
+          stroke: ["#4ade80", "#facc15", "#ef4444"]
+        }}
+        transition={{ duration: 15, ease: "linear" }}
+        style={{ 
+          filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.8))'
+        }}
+      />
+    </svg>
+  );
+};
+
 export const PlayerHand: React.FC<PlayerHandProps> = ({
   playerName,
   cards,
@@ -202,15 +263,19 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     return (
       <div className={`${positionClasses[position]} player-hand player-hand-${position}`}>
         <motion.div
-          animate={{ scale: isCurrentPlayer ? 1.06 : 1 }}
+          animate={{ scale: isCurrentPlayer ? [1.06, 1.12, 1.06] : 1 }}
+          transition={{ 
+            scale: isCurrentPlayer ? { repeat: Infinity, duration: 2, ease: "easeInOut" } : { duration: 0.3 }
+          }}
           className="flex flex-col items-center gap-2"
         >
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-2xl border bg-white/95 shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
-              isCurrentPlayer ? 'border-yellow-400 ring-2 ring-yellow-300/70' : 'border-white/70'
+            className={`relative flex h-10 w-10 items-center justify-center rounded-2xl border bg-white/95 shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
+              isCurrentPlayer ? 'border-yellow-400' : 'border-white/70'
             }`}
           >
             {getAvatarIcon(position, true)}
+            {isCurrentPlayer && <TimerHighlight compact={true} />}
           </div>
 
           <div className="relative h-24 w-14">
@@ -249,9 +314,13 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     <div className={`${positionClasses[position]} player-hand player-hand-${position}`}>
       <motion.div
         animate={{ 
-          scale: isCurrentPlayer ? 1.08 : 1, 
-          y: isCurrentPlayer && !compact ? -10 : 0,
+          scale: isCurrentPlayer ? [1.08, 1.15, 1.08] : 1, 
+          y: isCurrentPlayer && !compact ? -12 : 0,
           rotate: avatarRotation
+        }}
+        transition={{
+          scale: isCurrentPlayer ? { repeat: Infinity, duration: 2, ease: "easeInOut" } : { duration: 0.3 },
+          y: { type: 'spring', stiffness: 300, damping: 20 }
         }}
         className={`${avatarClasses[position]} z-20 flex flex-col items-center pointer-events-none`}
       >
@@ -260,7 +329,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
             compact ? 'h-11 w-11 border' : 'h-16 w-16 border-2'
           } ${
             isLocalPlayer ? 'border-green-400 ring-2 ring-green-400/45 shadow-[0_0_15px_rgba(74,222,128,0.5)]' :
-            isCurrentPlayer ? 'border-yellow-400 shadow-[0_0_18px_#ffcc00] ring-2 ring-yellow-400/45' : 'border-gray-200'
+            isCurrentPlayer ? 'border-yellow-400 shadow-[0_0_25px_rgba(250,204,21,0.6)] ring-4 ring-yellow-400/30' : 'border-gray-200'
           }`}
         >
           {getAvatarIcon(position, compact)}
@@ -271,15 +340,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
             </div>
           )}
 
-          {isCurrentPlayer && (
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
-              className={`absolute border-2 border-dashed border-yellow-400 opacity-50 ${
-                compact ? '-inset-0.5 rounded-2xl' : '-inset-1 rounded-2xl'
-              }`}
-            />
-          )}
+          {isCurrentPlayer && <TimerHighlight compact={compact} />}
 
           {!isHuman && (
             <div
