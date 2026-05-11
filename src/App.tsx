@@ -164,15 +164,9 @@ export default function App() {
     <div className="min-h-[100dvh] w-full">
       <AnimatePresence mode="wait">
         {screen === 'home' ? (
-          <motion.div
-            key="home"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div key="home">
             {homeContent}
-          </motion.div>
+          </div>
         ) : (
           <motion.div
             key="game"
