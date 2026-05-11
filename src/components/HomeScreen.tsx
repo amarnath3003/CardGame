@@ -58,7 +58,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     }
   };
 
-  const itemVariants = {
+  const itemVariants: any = {
     hidden: { opacity: 0, y: 30, scale: 0.9 },
     show: { 
       opacity: 1, 

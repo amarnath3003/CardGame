@@ -110,6 +110,7 @@ export interface LobbySlot {
   name: string;
   avatarIndex: number | null;
   difficulty?: AiDifficulty;
+  peerId?: string;
 }
 
 export interface LobbyState {

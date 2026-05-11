@@ -9,6 +9,7 @@ interface LobbyModalProps {
   isOwner: boolean;
   onClose: () => void;
   onLeave: () => void;
+  onStart: () => void;
   onAddAi: (slotIndex: number) => void;
   onClearSlot: (slotIndex: number) => void;
   onUpdateDifficulty: (slotIndex: number, difficulty: AiDifficulty) => void;
@@ -21,6 +22,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
   isOwner,
   onClose,
   onLeave,
+  onStart,
   onAddAi,
   onClearSlot,
   onUpdateDifficulty,
@@ -195,13 +197,24 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
           <p className="text-sm font-semibold text-white/80">
             Room status updates are shared locally.
           </p>
-          <button
-            type="button"
-            onClick={onLeave}
-            className="rounded-full border-2 border-white/70 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
-          >
-            Leave Room
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onLeave}
+              className="rounded-full border-2 border-white/70 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20"
+            >
+              Leave Room
+            </button>
+            {isOwner && (
+              <button
+                type="button"
+                onClick={onStart}
+                className="rounded-full border-[3px] border-white bg-gradient-to-b from-[#22c55e] to-[#16a34a] px-6 py-2 text-sm font-black uppercase tracking-[0.2em] text-white shadow-[0_4px_0_#166534] transition hover:scale-[1.02] active:translate-y-[4px] active:shadow-none"
+              >
+                Start Game
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </ModalShell>

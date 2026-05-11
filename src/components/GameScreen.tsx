@@ -8,7 +8,7 @@ import { RoundOverModal } from './RoundOverModal';
 import { LayoutMetrics } from '../types';
 
 export const GameScreen: React.FC = () => {
-  const { gameState, selectCard, placeCard, aiPlay, nextRound, restart } = useCardGame();
+  const { gameState, selectCard, placeCard, aiPlay, nextRound, restart, localPlayerId } = useCardGame();
 
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -37,23 +37,23 @@ export const GameScreen: React.FC = () => {
   }, [viewport.height, viewport.width]);
 
   useEffect(() => {
-    if (gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer === 0) {
+    if (!gameState || gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer === localPlayerId) {
       return;
     }
 
-    const timer = setTimeout(() => {
-      aiPlay();
-    }, 1500);
+    // Handled in MultiplayerContext
+  }, [gameState?.currentPlayer, gameState?.gameStatus, localPlayerId]);
 
-    return () => clearTimeout(timer);
-  }, [gameState.currentPlayer, gameState.gameStatus, aiPlay]);
+  if (!gameState) {
+    return null;
+  }
 
-  const playerPositions = [
-    { index: 0, position: 'bottom' as const },
-    { index: 1, position: 'top' as const },
-    { index: 2, position: 'left' as const },
-    { index: 3, position: 'right' as const },
-  ];
+  // Rotate player positions based on localPlayerId
+  const positions = ['bottom', 'left', 'top', 'right'] as const;
+  const playerPositions = gameState.players.map((_, index) => {
+    const offset = (index - localPlayerId + 4) % 4;
+    return { index, position: positions[offset] };
+  });
 
   return (
     <div
@@ -102,23 +102,25 @@ export const GameScreen: React.FC = () => {
         </p>
       </div>
 
-      <div className="game-restart absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30">
-        <button
-          onClick={restart}
-          className={`rounded-full border-2 border-white bg-gradient-to-b from-red-500 to-red-600 text-white transition-all hover:from-red-400 hover:to-red-500 active:translate-y-[6px] active:shadow-[0_0px_0_#990000,0_5px_10px_rgba(0,0,0,0.3)] ${
-            layout.isCompactLandscape
-              ? 'p-2.5 shadow-[0_5px_0_#990000,0_8px_16px_rgba(0,0,0,0.28)]'
-              : 'p-3 shadow-[0_6px_0_#990000,0_10px_20px_rgba(0,0,0,0.3)] md:p-4'
-          }`}
-          title="Restart Game"
-        >
-          <RotateCcw strokeWidth={3} size={layout.isCompactLandscape ? 18 : 20} className="md:w-6 md:h-6" />
-        </button>
-      </div>
+      {localPlayerId === 0 && (
+        <div className="game-restart absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30">
+          <button
+            onClick={restart}
+            className={`rounded-full border-2 border-white bg-gradient-to-b from-red-500 to-red-600 text-white transition-all hover:from-red-400 hover:to-red-500 active:translate-y-[6px] active:shadow-[0_0px_0_#990000,0_5px_10px_rgba(0,0,0,0.3)] ${
+              layout.isCompactLandscape
+                ? 'p-2.5 shadow-[0_5px_0_#990000,0_8px_16px_rgba(0,0,0,0.28)]'
+                : 'p-3 shadow-[0_6px_0_#990000,0_10px_20px_rgba(0,0,0,0.3)] md:p-4'
+            }`}
+            title="Restart Game"
+          >
+            <RotateCcw strokeWidth={3} size={layout.isCompactLandscape ? 18 : 20} className="md:w-6 md:h-6" />
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {gameState.gameStatus === 'ROUND_ACTIVE' &&
-          gameState.currentPlayer === 0 &&
+          gameState.currentPlayer === localPlayerId &&
           gameState.selectedCardIdx !== null && (
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.8 }}
@@ -157,8 +159,12 @@ export const GameScreen: React.FC = () => {
           isCurrentPlayer={gameState.currentPlayer === index}
           isHuman={gameState.players[index].isHuman}
           isOut={gameState.players[index].isOut}
-          selectedCardIdx={gameState.selectedCardIdx}
-          onCardSelect={(idx) => selectCard(idx)}
+          selectedCardIdx={index === localPlayerId ? gameState.selectedCardIdx : null}
+          onCardSelect={(idx) => {
+            if (index === localPlayerId) {
+               selectCard(idx);
+            }
+          }}
           layout={layout}
         />
       ))}
@@ -180,9 +186,9 @@ export const GameScreen: React.FC = () => {
             }
             detailLabel={gameState.roundOutcome === 'CUT' ? 'Punishment Trigger' : 'Winning Card'}
             detailValue={gameState.roundOutcome === 'CUT' ? gameState.cutCard || 'Unknown' : gameState.highestCard || 'Unknown'}
-            buttonLabel="NEXT ROUND"
+            buttonLabel={localPlayerId === 0 ? "NEXT ROUND" : "WAITING FOR HOST..."}
             outcome={gameState.roundOutcome || 'NORMAL'}
-            onContinue={nextRound}
+            onContinue={localPlayerId === 0 ? nextRound : () => {}}
             layout={layout}
           />
         )}
@@ -195,9 +201,9 @@ export const GameScreen: React.FC = () => {
             message={`${gameState.players[gameState.gameLoser].name} is the last player still holding cards.`}
             detailLabel="Loser"
             detailValue={gameState.players[gameState.gameLoser].name}
-            buttonLabel="PLAY AGAIN"
+            buttonLabel={localPlayerId === 0 ? "PLAY AGAIN" : "WAITING FOR HOST..."}
             outcome="GAME_OVER"
-            onContinue={restart}
+            onContinue={localPlayerId === 0 ? restart : () => {}}
             layout={layout}
           />
         )}

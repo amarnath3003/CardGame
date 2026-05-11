@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
-import { GameEngine } from '../game/GameEngine';
+import { useCallback, useState } from 'react';
+import { useMultiplayer } from '../contexts/MultiplayerContext';
 import type { GameState } from '../types';
 
 const CARD_RANK_PRIORITY: Record<string, number> = {
@@ -25,23 +25,16 @@ export const getCardSuit = (card: string): string => card[card.length - 1];
 export const getCardPriority = (card: string): number => CARD_RANK_PRIORITY[getCardRank(card)] || 0;
 
 export const useCardGame = () => {
-  const engineRef = useRef<GameEngine>(new GameEngine());
-  const [gameState, setGameState] = useState<GameState>(() => engineRef.current.initializeGame());
-
-  const syncState = useCallback((selectedCardIdx: number | null = null) => {
-    setGameState({
-      ...engineRef.current.getState(),
-      selectedCardIdx,
-    });
-  }, []);
+  const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound, restartGame: mpRestartGame } = useMultiplayer();
+  const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null);
 
   const selectCard = useCallback(
     (index: number) => {
-      if (gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer !== 0 || gameState.players[0].isOut) {
+      if (!gameState || gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer !== localPlayerId || gameState.players[localPlayerId].isOut) {
         return;
       }
 
-      const humanPlayer = gameState.players[0];
+      const humanPlayer = gameState.players[localPlayerId];
       const cardCode = humanPlayer.cards[index];
 
       if (!cardCode) {
@@ -55,74 +48,49 @@ export const useCardGame = () => {
         return;
       }
 
-      const nextSelection = gameState.selectedCardIdx === index ? null : index;
-      syncState(nextSelection);
+      const nextSelection = selectedCardIdx === index ? null : index;
+      setSelectedCardIdx(nextSelection);
     },
-    [gameState, syncState],
+    [gameState, localPlayerId, selectedCardIdx],
   );
 
   const placeCard = useCallback(() => {
-    if (gameState.selectedCardIdx === null || gameState.currentPlayer !== 0) {
+    if (!gameState || selectedCardIdx === null || gameState.currentPlayer !== localPlayerId) {
       return;
     }
 
-    const humanPlayer = gameState.players[0];
-    const selectedCardId = humanPlayer.cardIds[gameState.selectedCardIdx];
+    const humanPlayer = gameState.players[localPlayerId];
+    const selectedCardId = humanPlayer.cardIds[selectedCardIdx];
 
     if (!selectedCardId) {
       return;
     }
 
-    const result = engineRef.current.playCard(0, selectedCardId);
-
-    console.log(`[useCardGame] Human play result: ${result.event}. ${result.message}`);
-    syncState(null);
-  }, [gameState, syncState]);
+    mpPlayCard(localPlayerId, selectedCardId);
+    setSelectedCardIdx(null);
+  }, [gameState, localPlayerId, selectedCardIdx, mpPlayCard]);
 
   const aiPlay = useCallback(() => {
-    const state = engineRef.current.getState();
-
-    if (state.currentPlayer === 0 || state.gameStatus !== 'ROUND_ACTIVE') {
-      return;
-    }
-
-    const currentPlayer = state.players[state.currentPlayer];
-
-    if (!currentPlayer || currentPlayer.isOut) {
-      return;
-    }
-
-    const legalMoves = engineRef.current.getLegalMoves(currentPlayer.id);
-
-    if (legalMoves.length === 0) {
-      return;
-    }
-
-    const chosenMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
-    const result = engineRef.current.playCard(currentPlayer.id, chosenMove.id);
-
-    console.log(`[useCardGame] AI play result: ${result.event}. ${result.message}`);
-    syncState(null);
-  }, [syncState]);
+    // Handled by host in MultiplayerContext automatically
+  }, []);
 
   const nextRound = useCallback(() => {
-    if (gameState.gameStatus !== 'ROUND_RESOLVING') {
+    if (gameState?.gameStatus !== 'ROUND_RESOLVING') {
       return;
     }
 
-    engineRef.current.startNextRound();
-    syncState(null);
-  }, [gameState.gameStatus, syncState]);
+    mpNextRound(localPlayerId);
+  }, [gameState, localPlayerId, mpNextRound]);
 
   const restart = useCallback(() => {
-    engineRef.current = new GameEngine();
-    engineRef.current.initializeGame();
-    syncState(null);
-  }, [syncState]);
+    mpRestartGame(localPlayerId);
+  }, [localPlayerId, mpRestartGame]);
 
   return {
-    gameState,
-    legalMoves: gameState.players[0]?.legalMoves ?? [],
+    // @ts-ignore
+    gameState: gameState ? { ...gameState, selectedCardIdx } : null,
+    localPlayerId,
+    legalMoves: gameState?.players[localPlayerId]?.legalMoves ?? [],
     selectCard,
     placeCard,
     aiPlay,

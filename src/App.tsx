@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { HomeScreen } from './components/HomeScreen';
 import { GameScreen } from './components/GameScreen';
@@ -7,6 +7,7 @@ import { JoinRoomModal } from './components/JoinRoomModal';
 import { LobbyModal } from './components/LobbyModal';
 import { AVATAR_PRESETS } from './data/avatars';
 import { AiDifficulty, LobbySlot, LobbyState, Profile } from './types';
+import { useMultiplayer } from './contexts/MultiplayerContext';
 
 type Screen = 'home' | 'game';
 type ActiveModal = 'play-ai' | 'join-room' | 'lobby' | null;
@@ -15,15 +16,33 @@ const ROOM_BASE_URL = 'https://seetuatti.game/room';
 const DEFAULT_DIFFICULTY: AiDifficulty = 'Normal';
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('home');
+  const {
+    lobbyState,
+    gameState,
+    isHost,
+    hostCreateLobby,
+    clientJoinLobby,
+    leaveLobby,
+    updateLobbySlot,
+    startGame,
+    error
+  } = useMultiplayer();
+
+  const screen: Screen = gameState ? 'game' : 'home';
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [playAiDifficulty, setPlayAiDifficulty] = useState<AiDifficulty>('Normal');
   const [profile, setProfile] = useState<Profile>({
     name: 'Player One',
     avatarIndex: 0,
   });
-  const [lobbyState, setLobbyState] = useState<LobbyState | null>(null);
-  const [isLobbyOwner, setIsLobbyOwner] = useState(false);
+
+  // Handle errors
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      setActiveModal(null);
+    }
+  }, [error]);
 
   const getAiAvatarIndex = (slotIndex: number) =>
     (slotIndex + 2) % Math.max(1, AVATAR_PRESETS.length);
@@ -50,7 +69,27 @@ export default function App() {
 
   const handleStartPlayAi = () => {
     setActiveModal(null);
-    setScreen('game');
+    const roomId = generateRoomId();
+    const slots = Array.from({ length: 4 }, (_, index) => createEmptySlot(index));
+    slots[0] = {
+      index: 0,
+      type: 'human',
+      name: profile.name || 'Player One',
+      avatarIndex: profile.avatarIndex,
+    };
+    for (let i = 1; i < 4; i++) {
+      slots[i] = {
+        index: i,
+        type: 'ai',
+        name: 'AI Bot',
+        avatarIndex: getAiAvatarIndex(i),
+        difficulty: playAiDifficulty,
+      };
+    }
+    hostCreateLobby(roomId, createLobby(roomId, slots, 0));
+    setTimeout(() => {
+      startGame();
+    }, 100);
   };
 
   const handleCreateRoom = () => {
@@ -62,52 +101,37 @@ export default function App() {
       name: profile.name || 'Player One',
       avatarIndex: profile.avatarIndex,
     };
-    setLobbyState(createLobby(roomId, slots, 0));
-    setIsLobbyOwner(true);
+    hostCreateLobby(roomId, createLobby(roomId, slots, 0));
     setActiveModal('lobby');
   };
 
   const handleOpenJoinRoom = () => setActiveModal('join-room');
 
-  const handleJoinRoom = (roomId: string) => {
-    const slots = Array.from({ length: 4 }, (_, index) => createEmptySlot(index));
-    slots[0] = {
-      index: 0,
-      type: 'human',
-      name: 'Room Host',
-      avatarIndex: getAiAvatarIndex(0),
-    };
-    slots[1] = {
-      index: 1,
-      type: 'human',
-      name: profile.name || 'Player One',
-      avatarIndex: profile.avatarIndex,
-    };
-    setLobbyState(createLobby(roomId, slots, 0));
-    setIsLobbyOwner(false);
-    setActiveModal('lobby');
+  const handleJoinRoom = async (roomId: string) => {
+    try {
+      await clientJoinLobby(roomId, profile);
+      setActiveModal('lobby');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to join room.');
+    }
   };
 
   const handleLeaveLobby = () => {
     setActiveModal(null);
-    setLobbyState(null);
-    setIsLobbyOwner(false);
+    leaveLobby();
   };
 
-  const updateLobbySlot = (slotIndex: number, updater: (slot: LobbySlot) => LobbySlot) => {
-    setLobbyState((prev) => {
-      if (!prev) {
-        return prev;
-      }
-      const updatedSlots = prev.slots.map((slot) =>
-        slot.index === slotIndex ? updater(slot) : slot
-      );
-      return { ...prev, slots: updatedSlots };
-    });
+  const updateLobbySlotHelper = (slotIndex: number, updater: (slot: LobbySlot) => LobbySlot) => {
+    if (!lobbyState) return;
+    const updatedSlots = lobbyState.slots.map((slot) =>
+      slot.index === slotIndex ? updater(slot) : slot
+    );
+    updateLobbySlot({ ...lobbyState, slots: updatedSlots });
   };
 
   const handleAddAi = (slotIndex: number) => {
-    updateLobbySlot(slotIndex, (slot) => ({
+    updateLobbySlotHelper(slotIndex, (slot) => ({
       ...slot,
       type: 'ai',
       name: 'AI Bot',
@@ -117,11 +141,11 @@ export default function App() {
   };
 
   const handleClearSlot = (slotIndex: number) => {
-    updateLobbySlot(slotIndex, () => createEmptySlot(slotIndex));
+    updateLobbySlotHelper(slotIndex, () => createEmptySlot(slotIndex));
   };
 
   const handleUpdateDifficulty = (slotIndex: number, difficulty: AiDifficulty) => {
-    updateLobbySlot(slotIndex, (slot) => ({
+    updateLobbySlotHelper(slotIndex, (slot) => ({
       ...slot,
       difficulty,
     }));
@@ -184,9 +208,10 @@ export default function App() {
         {screen === 'home' && activeModal === 'lobby' && lobbyState && (
           <LobbyModal
             lobby={lobbyState}
-            isOwner={isLobbyOwner}
+            isOwner={isHost}
             onClose={handleLeaveLobby}
             onLeave={handleLeaveLobby}
+            onStart={() => startGame()}
             onAddAi={handleAddAi}
             onClearSlot={handleClearSlot}
             onUpdateDifficulty={handleUpdateDifficulty}
