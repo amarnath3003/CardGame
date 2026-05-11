@@ -97,18 +97,18 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   const avatarClasses = useMemo(() => {
     if (compact) {
       return {
-        bottom: 'absolute -top-10 left-1/2 -translate-x-1/2',
-        top: 'absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-180',
-        left: 'absolute -top-6 left-1/2 -translate-x-1/2',
-        right: 'absolute -top-6 left-1/2 -translate-x-1/2',
+        bottom: 'absolute -top-12 left-2 flex flex-col items-center',
+        top: 'absolute -bottom-12 left-24 flex flex-col items-center rotate-180',
+        left: 'absolute -top-10 left-1/2 -translate-x-1/2 -rotate-90',
+        right: 'absolute -top-10 left-1/2 -translate-x-1/2 rotate-90',
       };
     }
 
     return {
-      bottom: 'absolute -top-12 md:-top-20 left-1/2 -translate-x-1/2',
-      top: 'absolute -bottom-12 md:-bottom-28 left-1/2 -translate-x-1/2 rotate-180',
-      left: 'absolute -bottom-12 md:-bottom-28 left-1/2 -translate-x-1/2 -rotate-90',
-      right: 'absolute -bottom-12 md:-bottom-28 left-1/2 -translate-x-1/2 rotate-90',
+      bottom: 'absolute -top-16 left-4 flex flex-col items-center',
+      top: 'absolute -bottom-16 left-32 flex flex-col items-center rotate-180',
+      left: 'absolute -bottom-20 left-1/2 -translate-x-1/2 -rotate-90',
+      right: 'absolute -bottom-20 left-1/2 -translate-x-1/2 rotate-90',
     };
   }, [compact]);
 
