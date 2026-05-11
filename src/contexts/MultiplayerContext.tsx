@@ -9,8 +9,7 @@ export type MultiplayerMessage =
   | { type: 'START_GAME'; gameState: GameState }
   | { type: 'GAME_STATE_UPDATE'; gameState: GameState }
   | { type: 'PLAY_CARD'; cardId: string; playerId: number }
-  | { type: 'NEXT_ROUND'; playerId: number }
-  | { type: 'RESTART_GAME'; playerId: number };
+  | { type: 'NEXT_ROUND'; playerId: number };
 
 interface MultiplayerContextValue {
   isHost: boolean;
@@ -25,7 +24,7 @@ interface MultiplayerContextValue {
   startGame: () => void; // Host only
   playCard: (playerId: number, cardId: string) => void;
   nextRound: (playerId: number) => void;
-  restartGame: (playerId: number) => void;
+
   error: string | null;
 }
 
@@ -139,10 +138,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           hostEngineRef.current.startNextRound();
           syncEngineState();
         }
-        else if (msg.type === 'RESTART_GAME' && hostEngineRef.current) {
-          hostEngineRef.current.initializeGame();
-          syncEngineState();
-        }
+
       });
 
       conn.on('close', () => {
@@ -282,17 +278,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  const restartGame = (playerId: number) => {
-    if (isHost && hostEngineRef.current) {
-      hostEngineRef.current.initializeGame();
-      syncEngineState();
-    } else {
-      const conn = connectionsRef.current.get('host');
-      if (conn?.open) {
-        conn.send({ type: 'RESTART_GAME', playerId });
-      }
-    }
-  };
+
 
   // Auto AI Play for Host
   useEffect(() => {
@@ -331,7 +317,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       startGame,
       playCard,
       nextRound,
-      restartGame,
+
       error
     }}>
       {children}

@@ -25,7 +25,7 @@ export const getCardSuit = (card: string): string => card[card.length - 1];
 export const getCardPriority = (card: string): number => CARD_RANK_PRIORITY[getCardRank(card)] || 0;
 
 export const useCardGame = () => {
-  const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound, restartGame: mpRestartGame } = useMultiplayer();
+  const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound } = useMultiplayer();
   const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null);
 
   const selectCard = useCallback(
@@ -82,10 +82,6 @@ export const useCardGame = () => {
     mpNextRound(localPlayerId);
   }, [gameState, localPlayerId, mpNextRound]);
 
-  const restart = useCallback(() => {
-    mpRestartGame(localPlayerId);
-  }, [localPlayerId, mpRestartGame]);
-
   return {
     // @ts-ignore
     gameState: gameState ? { ...gameState, selectedCardIdx } : null,
@@ -95,6 +91,5 @@ export const useCardGame = () => {
     placeCard,
     aiPlay,
     nextRound,
-    restart,
   };
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useCardGame } from '../hooks/useCardGame';
 import { PlayerHand } from './PlayerHand';
 import { MiddleDeck } from './MiddleDeck';
@@ -8,7 +8,7 @@ import { RoundOverModal } from './RoundOverModal';
 import { LayoutMetrics } from '../types';
 
 export const GameScreen: React.FC = () => {
-  const { gameState, selectCard, placeCard, aiPlay, nextRound, restart, localPlayerId } = useCardGame();
+  const { gameState, selectCard, placeCard, aiPlay, nextRound, localPlayerId } = useCardGame();
 
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -102,21 +102,7 @@ export const GameScreen: React.FC = () => {
         </p>
       </div>
 
-      {localPlayerId === 0 && (
-        <div className="game-restart absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30">
-          <button
-            onClick={restart}
-            className={`rounded-full border-2 border-white bg-gradient-to-b from-red-500 to-red-600 text-white transition-all hover:from-red-400 hover:to-red-500 active:translate-y-[6px] active:shadow-[0_0px_0_#990000,0_5px_10px_rgba(0,0,0,0.3)] ${
-              layout.isCompactLandscape
-                ? 'p-2.5 shadow-[0_5px_0_#990000,0_8px_16px_rgba(0,0,0,0.28)]'
-                : 'p-3 shadow-[0_6px_0_#990000,0_10px_20px_rgba(0,0,0,0.3)] md:p-4'
-            }`}
-            title="Restart Game"
-          >
-            <RotateCcw strokeWidth={3} size={layout.isCompactLandscape ? 18 : 20} className="md:w-6 md:h-6" />
-          </button>
-        </div>
-      )}
+
 
       <AnimatePresence>
         {gameState.gameStatus === 'ROUND_ACTIVE' &&
@@ -202,9 +188,9 @@ export const GameScreen: React.FC = () => {
             message={`${gameState.players[gameState.gameLoser].name} is the last player still holding cards.`}
             detailLabel="Loser"
             detailValue={gameState.players[gameState.gameLoser].name}
-            buttonLabel={localPlayerId === 0 ? "PLAY AGAIN" : "WAITING FOR HOST..."}
+            buttonLabel=""
             outcome="GAME_OVER"
-            onContinue={localPlayerId === 0 ? restart : () => {}}
+            onContinue={() => {}}
             layout={layout}
           />
         )}

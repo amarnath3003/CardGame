@@ -97,16 +97,18 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
           </div>
         </div>
 
-        <button
-          onClick={onContinue}
-          className={`rounded-full border-white bg-gradient-to-b ${buttonGradient} font-black text-white transition-all hover:scale-105 active:translate-y-[8px] active:shadow-[0_0px_0_#1a73e8,0_5px_10px_rgba(0,0,0,0.4)] ${
-            compact
-              ? 'border-2 px-7 py-3 text-lg shadow-[0_6px_0_#1a73e8,0_12px_18px_rgba(0,0,0,0.35)]'
-              : 'border-[3px] px-12 py-4 text-2xl shadow-[0_8px_0_#1a73e8,0_15px_20px_rgba(0,0,0,0.4)]'
-          }`}
-        >
-          {buttonLabel}
-        </button>
+        {buttonLabel && (
+          <button
+            onClick={onContinue}
+            className={`rounded-full border-white bg-gradient-to-b ${buttonGradient} font-black text-white transition-all hover:scale-105 active:translate-y-[8px] active:shadow-[0_0px_0_#1a73e8,0_5px_10px_rgba(0,0,0,0.4)] ${
+              compact
+                ? 'border-2 px-7 py-3 text-lg shadow-[0_6px_0_#1a73e8,0_12px_18px_rgba(0,0,0,0.35)]'
+                : 'border-[3px] px-12 py-4 text-2xl shadow-[0_8px_0_#1a73e8,0_15px_20px_rgba(0,0,0,0.4)]'
+            }`}
+          >
+            {buttonLabel}
+          </button>
+        )}
       </motion.div>
     </motion.div>
   );
