@@ -24,15 +24,15 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
   }, [cards]);
 
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center pointer-events-none" style={{ width: 'min(48vw,360px)', height: 'min(60vw,420px)' }}>
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center pointer-events-none" style={{ width: 'clamp(180px, 32vw, 320px)', height: 'clamp(220px, 40vw, 360px)' }}>
       
       {/* Mystical Drop Zone Background */}
       <motion.div 
         animate={{ rotate: 360, scale: [1, 1.05, 1] }} 
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute w-56 h-56 rounded-full border-4 border-dashed border-white/20 bg-black/5"
+        className="absolute w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-dashed border-white/20 bg-black/5"
       />
-      <div className="absolute w-40 h-40 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 blur-xl" />
+      <div className="absolute w-28 h-28 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 blur-xl" />
       
       <div className="relative w-full h-full flex items-center justify-center">
         <AnimatePresence>
@@ -62,10 +62,10 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute -bottom-12 bg-gray-900/80 backdrop-blur-md rounded-full px-5 py-2 border-[3px] border-white/40 shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-2"
+          className="absolute -bottom-9 md:-bottom-12 bg-gray-900/80 backdrop-blur-md rounded-full px-4 md:px-5 py-1.5 md:py-2 border-[3px] border-white/40 shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center gap-2"
         >
           <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse" />
-          <p className="text-white font-black text-lg tracking-widest leading-none pt-1">
+          <p className="text-white font-black text-sm md:text-lg tracking-widest leading-none pt-1">
             PILE: {cards.length}
           </p>
         </motion.div>

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { GameState, GameStatus } from './types';
+import { GameState, GameStatus } from '../types';
 
 const ALL_CARDS = [
   "As","2s","3s","4s","5s","6s","7s","8s","9s","10s","Ks","Qs","Js",

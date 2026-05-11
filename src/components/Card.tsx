@@ -96,7 +96,7 @@ export const Card: React.FC<CardProps> = ({
       <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
       
       {/* Central big suit symbol */}
-      <span className={`text-7xl font-normal drop-shadow-sm absolute z-10 ${suitColor} pb-4`}>
+      <span className={`text-5xl md:text-7xl font-normal drop-shadow-sm absolute z-10 ${suitColor} pb-3 md:pb-4`}>
         {suitSymbol}
       </span>
       
@@ -105,14 +105,14 @@ export const Card: React.FC<CardProps> = ({
 
       {/* Top Left Corner */}
       <div className={`absolute top-2 left-2 text-center ${suitColor} z-20`}>
-        <div className="font-black leading-none drop-shadow-sm">{rank}</div>
-        <div className="leading-none drop-shadow-sm">{suitSymbol}</div>
+        <div className="text-xs md:text-sm font-black leading-none drop-shadow-sm">{rank}</div>
+        <div className="text-xs md:text-sm leading-none drop-shadow-sm">{suitSymbol}</div>
       </div>
       
       {/* Bottom Right Corner */}
       <div className={`absolute bottom-2 right-2 text-center ${suitColor} rotate-180 z-20`}>
-        <div className="font-black leading-none drop-shadow-sm">{rank}</div>
-        <div className="leading-none drop-shadow-sm">{suitSymbol}</div>
+        <div className="text-xs md:text-sm font-black leading-none drop-shadow-sm">{rank}</div>
+        <div className="text-xs md:text-sm leading-none drop-shadow-sm">{suitSymbol}</div>
       </div>
     </motion.div>
   );

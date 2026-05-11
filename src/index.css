@@ -12,6 +12,28 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
+.game-root {
+  min-height: 100dvh;
+  width: 100vw;
+}
+
+@media (orientation: landscape) and (max-height: 700px) {
+  .game-root.landscape-tight .game-header {
+    transform: scale(0.9);
+    transform-origin: top left;
+  }
+
+  .game-root.landscape-tight .game-restart {
+    transform: scale(0.9);
+    transform-origin: top right;
+  }
+
+  .game-root.landscape-tight .play-button {
+    bottom: 18vh;
+    transform: translateX(-50%) scale(0.85);
+  }
+}
+
 .card {
   @apply transition-all duration-200 ease-in-out;
 }
