@@ -38,7 +38,7 @@ export default function App() {
 
   // AI turn timer
   useEffect(() => {
-    if (gameState.gameStatus !== 'PLAYING' || gameState.currentPlayer === 0) {
+    if (gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer === 0) {
       return;
     }
 
@@ -82,7 +82,7 @@ export default function App() {
         }`}>CARD GAME</h1>
         <div className={`${layout.isCompactLandscape ? 'h-6' : 'h-8'} w-[2px] bg-white/30`} />
         <p className={`font-bold text-yellow-300 drop-shadow-md ${layout.isCompactLandscape ? 'text-sm' : 'text-base md:text-xl'}`}>
-          ROUND {gameState.turnCounter + 1}
+          ROUND {gameState.roundNumber}
         </p>
       </div>
 
@@ -103,7 +103,7 @@ export default function App() {
 
       {/* Central Action Button for Human Player */}
       <AnimatePresence>
-        {gameState.currentPlayer === 0 && gameState.selectedCardIdx !== null && (
+        {gameState.gameStatus === 'ROUND_ACTIVE' && gameState.currentPlayer === 0 && gameState.selectedCardIdx !== null && (
           <motion.div 
             initial={{ opacity: 0, y: 50, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -143,6 +143,7 @@ export default function App() {
           position={position}
           isCurrentPlayer={gameState.currentPlayer === index}
           isHuman={gameState.players[index].isHuman}
+          isOut={gameState.players[index].isOut}
           selectedCardIdx={gameState.selectedCardIdx}
           onCardSelect={(idx) => selectCard(idx)}
           layout={layout}
@@ -154,11 +155,38 @@ export default function App() {
 
       {/* Round Over Modal */}
       <AnimatePresence>
-        {gameState.gameStatus === 'ROUND_OVER' && gameState.roundWinner !== null && (
+        {gameState.gameStatus === 'ROUND_RESOLVING' && gameState.roundWinner !== null && (
           <RoundOverModal
-            winnerName={gameState.players[gameState.roundWinner].name}
-            highestCard={gameState.highestCard || 'Unknown'}
+            title={
+              gameState.roundOutcome === 'CUT'
+                ? `${gameState.players[gameState.roundWinner].name} TAKES THE PILE`
+                : `${gameState.players[gameState.roundWinner].name} WINS THE ROUND`
+            }
+            message={
+              gameState.roundOutcome === 'CUT'
+                ? `${gameState.players[gameState.roundWinner].name} held the highest pre-cut card and is punished with the pile.`
+                : `${gameState.players[gameState.roundWinner].name} played the top card of the trick and leads again.`
+            }
+            detailLabel={gameState.roundOutcome === 'CUT' ? 'Punishment Trigger' : 'Winning Card'}
+            detailValue={gameState.roundOutcome === 'CUT' ? gameState.cutCard || 'Unknown' : gameState.highestCard || 'Unknown'}
+            buttonLabel="NEXT ROUND"
+            outcome={gameState.roundOutcome || 'NORMAL'}
             onContinue={nextRound}
+            layout={layout}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {gameState.gameStatus === 'GAME_OVER' && gameState.gameLoser !== null && (
+          <RoundOverModal
+            title="GAME OVER"
+            message={`${gameState.players[gameState.gameLoser].name} is the last player still holding cards.`}
+            detailLabel="Loser"
+            detailValue={gameState.players[gameState.gameLoser].name}
+            buttonLabel="PLAY AGAIN"
+            outcome="GAME_OVER"
+            onContinue={restart}
             layout={layout}
           />
         )}

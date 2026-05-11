@@ -10,6 +10,7 @@ interface PlayerHandProps {
   position: 'bottom' | 'top' | 'left' | 'right';
   isCurrentPlayer: boolean;
   isHuman: boolean;
+  isOut: boolean;
   selectedCardIdx: number | null;
   onCardSelect: (index: number) => void;
   layout: LayoutMetrics;
@@ -45,6 +46,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   position,
   isCurrentPlayer,
   isHuman,
+  isOut,
   selectedCardIdx,
   onCardSelect,
   layout,
@@ -232,7 +234,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           </div>
 
           <div className="rounded-full border border-white/30 bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_10px_rgba(0,0,0,0.35)]">
-            {playerName.replace('Player ', 'P')}
+            {isOut ? 'SAFE' : playerName.replace('Player ', 'P')}
           </div>
         </motion.div>
       </div>
@@ -281,7 +283,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           }`}
         >
           <p className={`text-center font-bold text-white ${compact ? 'text-[10px] tracking-[0.18em]' : 'text-sm tracking-wide'}`}>
-            {playerName}
+            {isOut ? `${playerName} • SAFE` : playerName}
           </p>
         </div>
       </motion.div>
