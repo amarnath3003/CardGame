@@ -56,13 +56,14 @@ export const Card: React.FC<CardProps> = ({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`${sizeClasses[size]} relative rounded-xl border-white shadow-[0_8px_16px_rgba(0,0,0,0.4)] cursor-pointer flex items-center justify-center overflow-hidden`}
         style={{
-          background: 'linear-gradient(135deg, #ff3366, #b30000)',
+          background: 'linear-gradient(135deg, #2b32b2, #1488cc)',
           transformOrigin: 'bottom center'
         }}
       >
         <div className="absolute inset-2 border-2 border-white/30 rounded-lg flex items-center justify-center">
-           <div className="w-8 h-8 rounded-full bg-white/20 blur-[2px]" />
-           <span className="absolute text-white/50 font-black italic transform -rotate-12 select-none" style={{ fontSize: size === 'sm' ? '0.75rem' : '1.5rem' }}>UNO</span>
+           <div className="w-12 h-12 rounded-full border-[3px] border-white/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 blur-[1px]" />
+           </div>
         </div>
         {/* Gloss wrap */}
         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/40 to-white/0 pointer-events-none" />
@@ -101,9 +102,9 @@ export const Card: React.FC<CardProps> = ({
       {/* Central ellipse backdrop */}
       <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
       
-      {/* Central big value */}
-      <span className={`text-6xl font-black italic drop-shadow-sm absolute z-10 ${suitColor} pb-2`}>
-        {rank}
+      {/* Central big suit symbol */}
+      <span className={`text-7xl font-normal drop-shadow-sm absolute z-10 ${suitColor} pb-4`}>
+        {suitSymbol}
       </span>
       
       {/* Gloss reflection overlay */}
