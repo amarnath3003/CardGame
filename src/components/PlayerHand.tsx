@@ -55,15 +55,15 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
 }) => {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
-  const useCompactSideStack = compact && isSideSeat && !isHuman;
-  const cardCount = isHuman ? cards.length : Math.min(cards.length, 13);
+  const useCompactSideStack = compact && isSideSeat && !isLocalPlayer;
+  const cardCount = isLocalPlayer ? cards.length : Math.min(cards.length, 13);
 
   const cardSize: CardVisualSize = useMemo(() => {
     if (!compact) {
-      return isHuman ? 'lg' : 'sm';
+      return isLocalPlayer ? 'lg' : 'sm';
     }
 
-    if (isHuman) {
+    if (isLocalPlayer) {
       return 'md';
     }
 
@@ -72,7 +72,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     }
 
     return 'xs';
-  }, [compact, isHuman, position]);
+  }, [compact, isLocalPlayer, position]);
 
   const cardWidth = CARD_WIDTHS[cardSize];
 
@@ -155,7 +155,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
       : position === 'top'
         ? 62
         : 74
-    : isHuman
+    : isLocalPlayer
       ? 132
       : 92;
 
@@ -305,13 +305,13 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
       >
         <AnimatePresence>
           {Array.from({ length: cardCount }).map((_, idx) => {
-            const cardValue = isHuman ? cards[idx] : '';
+            const cardValue = isLocalPlayer ? cards[idx] : '';
             const { rotation, yOffset } = getFanTransform(idx, cardCount);
             const xOffset = (idx - (cardCount - 1) / 2) * spacing;
 
             return (
               <motion.div
-                key={isHuman ? cardValue : `back-${playerName}-${idx}`}
+                key={isLocalPlayer ? cardValue : `back-${playerName}-${idx}`}
                 initial={{ opacity: 0, y: 100, scale: 0.5 }}
                 animate={{
                   opacity: 1,
@@ -328,14 +328,14 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
               >
                 <Card
                   value={cardValue}
-                  isBack={!isHuman}
-                  isSelected={isHuman && selectedCardIdx === idx}
+                  isBack={!isLocalPlayer}
+                  isSelected={isLocalPlayer && selectedCardIdx === idx}
                   size={cardSize}
                   rotation={0}
                   index={idx}
                   selectedLift={selectedLift}
                   hoverLift={hoverLift}
-                  onClick={() => isHuman && onCardSelect(idx)}
+                  onClick={() => isLocalPlayer && onCardSelect(idx)}
                 />
               </motion.div>
             );

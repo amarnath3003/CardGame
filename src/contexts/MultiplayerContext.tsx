@@ -98,12 +98,14 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       conn.on('data', (data: any) => {
         const msg = data as MultiplayerMessage;
         if (msg.type === 'JOIN') {
+          let joinedSlotIndex = -1;
           setLobbyState(prev => {
             if (!prev) return prev;
             const newLobby = { ...prev };
-            // Find empty human slot
-            const slotIndex = newLobby.slots.findIndex(s => s.type === 'empty');
+            // Find empty or AI slot
+            const slotIndex = newLobby.slots.findIndex(s => s.type === 'empty' || s.type === 'ai');
             if (slotIndex !== -1) {
+              joinedSlotIndex = slotIndex;
               newLobby.slots[slotIndex] = {
                 index: slotIndex,
                 type: 'human',
@@ -119,7 +121,13 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           });
           
           // Send current game state to the joining player if game already started
-          if (hostEngineRef.current) {
+          if (hostEngineRef.current && joinedSlotIndex !== -1) {
+            const player = hostEngineRef.current.players[joinedSlotIndex];
+            if (player) {
+              player.isHuman = true;
+              player.name = msg.profile.name;
+            }
+            syncEngineState();
             conn.send({ type: 'START_GAME', gameState: hostEngineRef.current.getState() });
           }
         } 
