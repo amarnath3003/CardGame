@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Users, DoorOpen, Sparkles, Star } from 'lucide-react';
+import { Play, Users, DoorOpen, Sparkles, Star, Heart, Diamond, Spade, Club } from 'lucide-react';
 import { AvatarBadge } from './AvatarBadge';
 import { ProfilePopover } from './ProfilePopover';
 import { Profile } from '../types';
@@ -132,11 +132,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
            initial={{ opacity: 0, scale: 0.5, y: -50 }}
            animate={{ opacity: 1, scale: 1, y: 0 }}
            transition={{ type: "spring", bounce: 0.6, duration: 0.8 }}
-           className="relative mb-2"
+           className="relative mb-8"
         >
           <div className="absolute -inset-8 bg-yellow-400/20 blur-3xl rounded-full" />
           <h1 className="text-3d font-display text-5xl uppercase tracking-[0.1em] text-[#facc15] sm:text-6xl md:text-8xl">
-            Seetu Atti
+            Seetu
           </h1>
           <motion.div 
             animate={{ rotate: 360 }}
@@ -146,15 +146,58 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
              <Star className="w-12 h-12 fill-current" />
           </motion.div>
         </motion.div>
-        
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-2 max-w-md text-sm font-bold text-blue-100 tracking-wider drop-shadow-md sm:text-base md:text-lg rounded-full bg-black/20 px-6 py-2 border border-white/10 backdrop-blur-sm"
+
+        {/* Card Suit Logo - ATTI */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="flex gap-4 justify-center mb-8"
         >
-          Shuffle up, launch rooms, and deal the action.
-        </motion.p>
+          {/* A - Hearts */}
+          <motion.div
+            whileHover={{ scale: 1.1, rotateZ: -5 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
+          >
+            <Heart className="w-6 h-6 text-red-600 fill-red-600" />
+            <span className="font-black text-3xl text-red-600">A</span>
+            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
+          </motion.div>
+
+          {/* T - Diamonds */}
+          <motion.div
+            whileHover={{ scale: 1.1, rotateZ: 5 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
+          >
+            <Diamond className="w-6 h-6 text-blue-600 fill-blue-600" />
+            <span className="font-black text-3xl text-blue-600">T</span>
+            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
+          </motion.div>
+
+          {/* T - Clubs */}
+          <motion.div
+            whileHover={{ scale: 1.1, rotateZ: -5 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
+          >
+            <Club className="w-6 h-6 text-gray-800 fill-gray-800" />
+            <span className="font-black text-3xl text-gray-800">T</span>
+            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
+          </motion.div>
+
+          {/* I - Spades */}
+          <motion.div
+            whileHover={{ scale: 1.1, rotateZ: 5 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="relative w-20 h-28 bg-gradient-to-br from-white to-gray-100 rounded-lg border-2 border-gray-300 shadow-[0_8px_20px_rgba(0,0,0,0.3)] flex flex-col items-center justify-between p-2 cursor-pointer group"
+          >
+            <Spade className="w-6 h-6 text-green-700 fill-green-700" />
+            <span className="font-black text-3xl text-green-700">I</span>
+            <p className="text-[10px] font-bold text-gray-700 tracking-widest">ATTI</p>
+          </motion.div>
+        </motion.div>
 
         {/* Buttons Menu */}
         <motion.div 
