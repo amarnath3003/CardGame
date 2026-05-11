@@ -129,7 +129,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     }
 
     if (position === 'top') {
-      return 'sm';
+      return 'xs';
     }
 
     return 'xs';
@@ -140,8 +140,8 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   const positionClasses = useMemo(() => {
     if (compact) {
       return {
-        bottom: 'absolute bottom-[calc(0.45rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 flex justify-center z-40',
-        top: 'absolute top-[calc(3.3rem+var(--safe-top))] left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
+        bottom: 'absolute bottom-[calc(0.25rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 flex justify-center z-40',
+        top: 'absolute top-[calc(1.0rem+var(--safe-top))] left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
         left: 'absolute left-[calc(0.45rem+var(--safe-left))] top-[44%] -translate-y-1/2 z-20',
         right: 'absolute right-[calc(0.45rem+var(--safe-right))] top-[44%] -translate-y-1/2 z-20',
       };
@@ -159,7 +159,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
     if (compact) {
       return {
         bottom: 'absolute -top-12 left-2 flex flex-col items-center',
-        top: 'absolute -bottom-12 left-24 flex flex-col items-center',
+        top: 'absolute -top-12 left-24 flex flex-col items-center',
         left: 'absolute -top-10 left-1/2 -translate-x-1/2',
         right: 'absolute -top-10 left-1/2 -translate-x-1/2',
       };
@@ -247,8 +247,8 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
       ? position === 'bottom'
         ? 24
         : position === 'top'
-          ? 12
-          : 18
+          ? 10
+          : 14
       : position === 'bottom'
         ? 42
         : 24;

@@ -34,7 +34,7 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
   return (
     <div
       className={`absolute left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center pointer-events-none ${
-        compact ? 'top-[43%]' : 'top-1/2'
+        compact ? 'top-[45%]' : 'top-1/2'
       }`}
       style={{
         width: compact ? 'clamp(148px, 26vw, 220px)' : 'clamp(180px, 32vw, 320px)',
