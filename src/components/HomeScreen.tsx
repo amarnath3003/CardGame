@@ -13,22 +13,7 @@ interface HomeScreenProps {
   onProfileChange: (profile: Profile) => void;
 }
 
-const FloatingElement = ({ delay, duration, x, y, scale, rotate, children }: any) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0 }}
-    animate={{ 
-      opacity: [0.3, 0.6, 0.3], 
-      y: [y, y - 30, y], 
-      x: [x, x + 15, x],
-      rotate: [rotate, rotate + 15, rotate - 15, rotate],
-      scale: [scale, scale * 1.1, scale]
-    }}
-    transition={{ duration, repeat: Infinity, delay, ease: "easeInOut" }}
-    className="absolute pointer-events-none"
-  >
-    {children}
-  </motion.div>
-);
+
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   profile,
@@ -70,40 +55,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <div className="home-root relative min-h-[100dvh] w-full overflow-hidden text-white">
-      {/* Dynamic Background FX */}
-      <motion.div
-        animate={{ x: [-120, 120], opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-        className="pointer-events-none absolute left-[-10%] top-[12%] h-32 w-64 rounded-full bg-white/20 blur-3xl"
-      />
-      <motion.div
-        animate={{ x: [120, -160], opacity: [0.3, 0.7, 0.3] }}
-        transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-        className="pointer-events-none absolute right-[-10%] top-[36%] h-40 w-72 rounded-full bg-[#facc15]/20 blur-[60px]"
-      />
-      <motion.div
-        animate={{ y: [0, -100, 0], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        className="pointer-events-none absolute left-[40%] bottom-[-10%] h-48 w-48 rounded-full bg-[#34d399]/20 blur-[50px]"
-      />
 
-      {/* Floating Decorative Elements */}
-      <FloatingElement delay={0} duration={8} x={50} y={150} scale={1.2} rotate={15}>
-        <div className="w-16 h-24 rounded-xl border-4 border-white/20 bg-gradient-to-br from-white/10 to-transparent shadow-lg backdrop-blur-sm" />
-      </FloatingElement>
-      <FloatingElement delay={2} duration={9} x={window.innerWidth - 150} y={100} scale={0.9} rotate={-20}>
-        <div className="w-12 h-16 rounded-lg border-2 border-[#facc15]/40 bg-gradient-to-br from-[#facc15]/20 to-transparent shadow-[0_0_15px_rgba(250,204,21,0.3)] backdrop-blur-sm" />
-      </FloatingElement>
-      <FloatingElement delay={1.5} duration={11} x={window.innerWidth - 100} y={window.innerHeight - 250} scale={1.4} rotate={35}>
-         <div className="w-20 h-28 rounded-2xl border-4 border-[#ff2222]/20 bg-gradient-to-br from-[#ff2222]/10 to-transparent shadow-xl backdrop-blur-md flex items-center justify-center">
-            <Star className="text-[#ff2222]/50 w-8 h-8" />
-         </div>
-      </FloatingElement>
-      <FloatingElement delay={3} duration={10} x={80} y={window.innerHeight - 200} scale={1} rotate={-10}>
-        <div className="w-16 h-20 rounded-xl border-2 border-white/10 bg-white/5 backdrop-blur shadow-md flex items-center justify-center">
-             <Sparkles className="text-white/30 w-6 h-6" />
-        </div>
-      </FloatingElement>
+
+
 
       {/* Profile Button - Top Right */}
       <div className="fixed right-4 top-4 z-50 md:right-6 md:top-6">
@@ -134,8 +88,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               Seetu
             </h1>
             <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               className="absolute -right-8 -top-8 text-yellow-300 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"
             >
                <Star className="w-12 h-12 fill-current" />

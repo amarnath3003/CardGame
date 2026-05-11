@@ -72,20 +72,7 @@ export const GameScreen: React.FC = () => {
         }`}
       />
 
-      <motion.div
-        animate={{ x: [-100, viewport.width + 100] }}
-        transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-        className={`absolute left-0 rounded-full bg-white/40 blur-md pointer-events-none ${
-          layout.isCompactLandscape ? 'top-6 h-8 w-24' : 'top-10 h-12 w-36 md:top-20 md:h-16 md:w-48'
-        }`}
-      />
-      <motion.div
-        animate={{ x: [-200, viewport.width + 200] }}
-        transition={{ duration: 80, repeat: Infinity, ease: 'linear', delay: 10 }}
-        className={`absolute right-0 rounded-full bg-white/30 pointer-events-none ${
-          layout.isCompactLandscape ? 'top-12 h-9 w-32 blur-lg' : 'top-24 h-14 w-48 blur-xl md:top-40 md:h-20 md:w-64'
-        }`}
-      />
+
 
       {/* Exit Button - Global */}
       <div className={`absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-40`}>
