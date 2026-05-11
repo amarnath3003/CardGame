@@ -106,7 +106,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       </FloatingElement>
 
       {/* Profile Button - Top Right */}
-      <div className="absolute right-[calc(1rem+var(--safe-right))] top-[calc(1rem+var(--safe-top))] z-50">
+      <div className="fixed right-4 top-4 z-50 md:right-6 md:top-6">
         <motion.button
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
