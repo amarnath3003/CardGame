@@ -54,12 +54,12 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
         animate={{ scale: 1, y: 0, rotateX: 0 }}
         exit={{ scale: 0.8, opacity: 0, y: -50 }}
         transition={{ type: 'spring', bounce: 0.4 }}
-        className={`relative w-full overflow-hidden text-center shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_20px_rgba(255,255,255,0.4)] ${
+        className={`relative w-full overflow-y-auto custom-scrollbar text-center shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_20px_rgba(255,255,255,0.4)] flex flex-col ${
           compact
             ? `max-w-[min(92vw,28rem)] rounded-[1.75rem] border-4 border-white/80 bg-gradient-to-br ${shellGradient} px-5 pb-5 pt-6`
             : `max-w-2xl rounded-[2rem] border-[6px] border-white/80 bg-gradient-to-br ${shellGradient} p-10`
         }`}
-        style={{ maxHeight: compact ? 'min(88dvh, 22rem)' : 'min(90dvh, 42rem)' }}
+        style={{ maxHeight: compact ? 'min(88dvh, 24rem)' : 'min(90dvh, 42rem)' }}
       >
         <div
           className={`absolute left-1/2 -translate-x-1/2 rounded-full bg-yellow-300 opacity-50 ${

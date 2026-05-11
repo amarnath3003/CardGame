@@ -36,14 +36,14 @@ export const ModalShell: React.FC<ModalShellProps> = ({
         animate={{ scale: 1, y: 0, rotateX: 0 }}
         exit={{ scale: 0.9, y: 30, opacity: 0 }}
         transition={{ type: 'spring', bounce: 0.35 }}
-        className={`relative w-full rounded-[2rem] border-[4px] border-white/70 bg-gradient-to-br from-[#1d4ed8] via-[#3b82f6] to-[#60a5fa] p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] ${
+        className={`relative w-full rounded-[2rem] border-[4px] border-white/70 bg-gradient-to-br from-[#1d4ed8] via-[#3b82f6] to-[#60a5fa] p-4 md:p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] flex flex-col max-h-[90dvh] ${
           SIZE_CLASSES[size]
         }`}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 shrink-0 mb-4">
           <div>
             {subtitle && (
               <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/80">
@@ -57,13 +57,15 @@ export const ModalShell: React.FC<ModalShellProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border-2 border-white/80 bg-white/10 p-2 text-white transition hover:bg-white/20"
+            className="rounded-full border-2 border-white/80 bg-white/10 p-2 text-white transition hover:bg-white/20 shrink-0"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="mt-6">{children}</div>
+        <div className="overflow-y-auto pr-2 custom-scrollbar flex-1 -mr-2">
+           {children}
+        </div>
       </motion.div>
     </motion.div>
   );

@@ -26,7 +26,7 @@ export const GameScreen: React.FC = () => {
 
   const layout = useMemo<LayoutMetrics>(() => {
     const isLandscape = viewport.width > viewport.height;
-    const isCompactLandscape = isLandscape && viewport.height <= 430;
+    const isCompactLandscape = isLandscape && viewport.height <= 500;
 
     return {
       mode: isCompactLandscape ? 'compactLandscape' : 'default',

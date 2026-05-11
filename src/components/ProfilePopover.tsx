@@ -39,7 +39,7 @@ export const ProfilePopover: React.FC<ProfilePopoverProps> = ({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10, scale: 0.96 }}
         transition={{ type: 'spring', bounce: 0.3 }}
-        className="absolute right-[calc(1rem+var(--safe-right))] top-[calc(5.5rem+var(--safe-top))] w-[min(90vw,22rem)] rounded-2xl border-2 border-white/60 bg-gradient-to-br from-[#1e40af] via-[#2563eb] to-[#3b82f6] p-4 shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
+        className="absolute right-[calc(1rem+var(--safe-right))] top-[calc(5.5rem+var(--safe-top))] w-[min(90vw,22rem)] rounded-2xl border-2 border-white/60 bg-gradient-to-br from-[#1e40af] via-[#2563eb] to-[#3b82f6] p-4 shadow-[0_16px_40px_rgba(0,0,0,0.35)] max-h-[calc(100dvh-6rem)] overflow-y-auto custom-scrollbar"
         onClick={(event) => event.stopPropagation()}
       >
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/70">Profile</p>
