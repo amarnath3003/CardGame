@@ -5,6 +5,7 @@ import { GameScreen } from './components/GameScreen';
 import { PlayAiModal } from './components/PlayAiModal';
 import { JoinRoomModal } from './components/JoinRoomModal';
 import { LobbyModal } from './components/LobbyModal';
+import { OrientationPrompt } from './components/OrientationPrompt';
 import { AVATAR_PRESETS } from './data/avatars';
 import { AiDifficulty, LobbySlot, LobbyState, Profile } from './types';
 import { useMultiplayer } from './contexts/MultiplayerContext';
@@ -220,6 +221,8 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      <OrientationPrompt />
     </div>
   );
 }
