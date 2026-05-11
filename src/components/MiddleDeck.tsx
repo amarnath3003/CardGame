@@ -24,7 +24,7 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
   }, [cards]);
 
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-64 h-64 flex items-center justify-center pointer-events-none">
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center justify-center pointer-events-none" style={{ width: 'min(48vw,360px)', height: 'min(60vw,420px)' }}>
       
       {/* Mystical Drop Zone Background */}
       <motion.div 
@@ -34,12 +34,12 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
       />
       <div className="absolute w-40 h-40 rounded-full bg-gradient-to-tr from-blue-500/20 to-purple-500/20 blur-xl" />
       
-      <div className="relative w-28 h-44 flex items-center justify-center">
+      <div className="relative w-full h-full flex items-center justify-center">
         <AnimatePresence>
           {visibleCards.map(({ card, rotation, xOffset, yOffset, id }, idx) => (
             <motion.div
               key={id}
-              initial={{ scale: 1.6, opacity: 0, y: -80 }}
+              initial={{ scale: 1.4, opacity: 0, y: -60 }}
               animate={{ 
                 scale: 1, 
                 opacity: 1, 

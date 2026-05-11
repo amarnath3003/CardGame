@@ -40,9 +40,9 @@ export const Card: React.FC<CardProps> = ({
   index = 0,
 }) => {
   const sizeClasses = {
-    sm: 'w-12 h-16 text-xs border-2',
-    md: 'w-20 h-32 text-lg border-[3px]',
-    lg: 'w-28 h-44 text-2xl border-[4px]',
+    sm: 'w-10 h-14 text-xs border-2 md:w-12 md:h-16',
+    md: 'w-16 h-24 text-base border-[3px] md:w-20 md:h-32 md:text-lg',
+    lg: 'w-20 h-32 text-xl border-[4px] md:w-28 md:h-44 md:text-2xl',
   };
 
   if (isBack) {

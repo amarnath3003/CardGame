@@ -30,7 +30,10 @@ export default function App() {
   ];
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden bg-gradient-to-b from-[#1a8cff] via-[#4dd2ff] to-[#aadd00]">
+    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-to-b from-[#1a8cff] via-[#4dd2ff] to-[#aadd00]">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="relative w-full max-w-[1200px] h-[min(80vh,900px)]" />
+      </div>
       {/* Decorative planet / world base */}
       <div className="absolute -bottom-[60vh] left-1/2 -translate-x-1/2 w-[200vw] h-[120vh] bg-gradient-to-b from-[#88e633] to-[#44aa00] rounded-[100%] border-t-[12px] border-[#aaff55]/50 shadow-[inset_0_40px_80px_rgba(0,100,0,0.4)] pointer-events-none" />
       
