@@ -159,6 +159,7 @@ export const GameScreen: React.FC = () => {
           isCurrentPlayer={gameState.currentPlayer === index}
           isHuman={gameState.players[index].isHuman}
           isOut={gameState.players[index].isOut}
+          isLocalPlayer={index === localPlayerId}
           selectedCardIdx={index === localPlayerId ? gameState.selectedCardIdx : null}
           onCardSelect={(idx) => {
             if (index === localPlayerId) {

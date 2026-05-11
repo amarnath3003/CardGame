@@ -11,6 +11,7 @@ interface PlayerHandProps {
   isCurrentPlayer: boolean;
   isHuman: boolean;
   isOut: boolean;
+  isLocalPlayer: boolean;
   selectedCardIdx: number | null;
   onCardSelect: (index: number) => void;
   layout: LayoutMetrics;
@@ -47,6 +48,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   isCurrentPlayer,
   isHuman,
   isOut,
+  isLocalPlayer,
   selectedCardIdx,
   onCardSelect,
   layout,
@@ -251,10 +253,17 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           className={`relative flex items-center justify-center rounded-2xl bg-white shadow-[0_8px_16px_rgba(0,0,0,0.3)] ${
             compact ? 'h-11 w-11 border' : 'h-16 w-16 border-2'
           } ${
+            isLocalPlayer ? 'border-green-400 ring-2 ring-green-400/45 shadow-[0_0_15px_rgba(74,222,128,0.5)]' :
             isCurrentPlayer ? 'border-yellow-400 shadow-[0_0_18px_#ffcc00] ring-2 ring-yellow-400/45' : 'border-gray-200'
           }`}
         >
           {getAvatarIcon(position, compact)}
+
+          {isLocalPlayer && (
+            <div className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-white shadow-md z-30`}>
+              YOU
+            </div>
+          )}
 
           {isCurrentPlayer && (
             <motion.div

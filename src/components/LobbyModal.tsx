@@ -7,6 +7,7 @@ import { AiDifficulty, LobbyState } from '../types';
 interface LobbyModalProps {
   lobby: LobbyState;
   isOwner: boolean;
+  localPlayerId: number;
   onClose: () => void;
   onLeave: () => void;
   onStart: () => void;
@@ -20,6 +21,7 @@ const DIFFICULTIES: AiDifficulty[] = ['Easy', 'Normal', 'Hard'];
 export const LobbyModal: React.FC<LobbyModalProps> = ({
   lobby,
   isOwner,
+  localPlayerId,
   onClose,
   onLeave,
   onStart,
@@ -93,6 +95,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
         <div className="grid gap-4 md:grid-cols-2">
           {lobby.slots.map((slot) => {
             const isOwnerSlot = lobby.ownerIndex === slot.index;
+            const isLocalPlayer = localPlayerId === slot.index;
             const isEmpty = slot.type === 'empty';
             const isAi = slot.type === 'ai';
 
@@ -100,7 +103,9 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
               <div
                 key={slot.index}
                 className={`flex flex-col gap-3 rounded-2xl border-2 p-4 ${
-                  isOwnerSlot
+                  isLocalPlayer
+                    ? 'border-green-400 bg-green-400/10'
+                    : isOwnerSlot
                     ? 'border-yellow-200 bg-yellow-200/10'
                     : 'border-white/30 bg-white/10'
                 }`}
@@ -110,13 +115,18 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     avatarIndex={slot.avatarIndex ?? 0}
                     label={slot.type === 'empty' ? 'Open' : slot.name}
                     size="sm"
-                    highlight={isOwnerSlot}
+                    highlight={isOwnerSlot || isLocalPlayer}
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="text-lg font-bold text-white">
                         {slot.type === 'empty' ? 'Open Slot' : slot.name}
                       </p>
+                      {isLocalPlayer && (
+                        <span className="rounded-full bg-green-400 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#064e3b]">
+                          You
+                        </span>
+                      )}
                       {isOwnerSlot && (
                         <span className="rounded-full bg-yellow-300 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#1f2937]">
                           Host

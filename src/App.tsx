@@ -25,6 +25,7 @@ export default function App() {
     leaveLobby,
     updateLobbySlot,
     startGame,
+    localPlayerId,
     error
   } = useMultiplayer();
 
@@ -209,6 +210,7 @@ export default function App() {
           <LobbyModal
             lobby={lobbyState}
             isOwner={isHost}
+            localPlayerId={localPlayerId}
             onClose={handleLeaveLobby}
             onLeave={handleLeaveLobby}
             onStart={() => startGame()}
