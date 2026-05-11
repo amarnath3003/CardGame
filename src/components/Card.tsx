@@ -11,8 +11,15 @@ const SUIT_SYMBOLS: { [key: string]: string } = {
 const SUIT_COLORS: { [key: string]: string } = {
   's': 'text-black',
   'c': 'text-black',
-  'h': 'text-red-600',
-  'd': 'text-red-600',
+  'h': 'text-uno-red',
+  'd': 'text-uno-red',
+};
+
+const CARD_BG_COLORS: { [key: string]: string } = {
+  's': 'bg-white',
+  'c': 'bg-white',
+  'h': 'bg-white',
+  'd': 'bg-white',
 };
 
 interface CardProps {
@@ -22,6 +29,7 @@ interface CardProps {
   isBack?: boolean;
   size?: 'sm' | 'md' | 'lg';
   cardCount?: number;
+  rotation?: number;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -31,20 +39,27 @@ export const Card: React.FC<CardProps> = ({
   isBack = false,
   size = 'md',
   cardCount,
+  rotation = 0,
 }) => {
   const sizeClasses = {
-    sm: 'w-12 h-16',
-    md: 'w-16 h-24',
-    lg: 'w-20 h-28',
+    sm: 'w-10 h-14 text-xs border-[1.5px]',
+    md: 'w-16 h-24 text-base border-2',
+    lg: 'w-24 h-36 text-xl border-[3px]',
+  };
+
+  const transformStyle = {
+    transform: `rotate(${rotation}deg) ${isSelected ? 'translateY(-15px) scale(1.1)' : ''}`,
+    transition: 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   };
 
   if (isBack) {
     return (
       <div
-        className={`${sizeClasses[size]} bg-blue-800 border-2 border-black rounded-lg flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow`}
+        className={`${sizeClasses[size]} bg-gradient-to-br from-uno-red to-red-800 border-white rounded-lg flex items-center justify-center cursor-pointer shadow-card`}
+        style={transformStyle}
       >
         {cardCount && (
-          <span className="text-white font-bold text-sm">{cardCount}</span>
+          <span className="text-white font-black text-shadow-sm">{cardCount}</span>
         )}
       </div>
     );
@@ -54,26 +69,31 @@ export const Card: React.FC<CardProps> = ({
   const suit = getCardSuit(value);
   const suitSymbol = SUIT_SYMBOLS[suit] || '';
   const suitColor = SUIT_COLORS[suit] || 'text-black';
+  const bgColor = CARD_BG_COLORS[suit] || 'bg-white';
 
   return (
     <div
       onClick={onClick}
+      style={transformStyle}
       className={`
         ${sizeClasses[size]}
-        bg-white border-2 border-black rounded-lg
+        ${bgColor} border-white rounded-lg shadow-card
         flex flex-col items-center justify-center
         card cursor-pointer
-        ${isSelected ? 'card-selected' : ''}
+        ${isSelected ? 'ring-4 ring-uno-yellow ring-offset-2' : ''}
         relative overflow-hidden
       `}
     >
+      {/* Central big symbol */}
+      <span className={`text-4xl opacity-20 absolute ${suitColor}`}>{suitSymbol}</span>
+
       <div className={`absolute top-1 left-1 text-center ${suitColor}`}>
-        <div className="font-bold text-xs leading-none">{rank}</div>
-        <div className="text-sm leading-none">{suitSymbol}</div>
+        <div className="font-black leading-none">{rank}</div>
+        <div className="leading-none">{suitSymbol}</div>
       </div>
       <div className={`absolute bottom-1 right-1 text-center ${suitColor} rotate-180`}>
-        <div className="font-bold text-xs leading-none">{rank}</div>
-        <div className="text-sm leading-none">{suitSymbol}</div>
+        <div className="font-black leading-none">{rank}</div>
+        <div className="leading-none">{suitSymbol}</div>
       </div>
     </div>
   );
