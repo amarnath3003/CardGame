@@ -40,7 +40,7 @@ export default function App() {
 
       {/* Header Info */}
       <div className="absolute top-6 left-6 z-30 bg-white/20 backdrop-blur-md px-6 py-3 rounded-full border-2 border-white/50 shadow-[0_8px_16px_rgba(0,0,0,0.2)] flex items-center gap-4">
-        <h1 className="text-3xl font-black text-white italic tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">UNO CARD</h1>
+        <h1 className="text-3xl font-black text-white italic tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">CARD GAME</h1>
         <div className="h-8 w-[2px] bg-white/30" />
         <p className="text-xl font-bold text-yellow-300 drop-shadow-md">ROUND {gameState.turnCounter + 1}</p>
       </div>

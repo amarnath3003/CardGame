@@ -26,7 +26,6 @@ interface CardProps {
   isSelected?: boolean;
   isBack?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  cardCount?: number;
   rotation?: number;
   index?: number;
 }
@@ -37,7 +36,6 @@ export const Card: React.FC<CardProps> = ({
   isSelected = false,
   isBack = false,
   size = 'md',
-  cardCount,
   rotation = 0,
   index = 0,
 }) => {
@@ -50,7 +48,6 @@ export const Card: React.FC<CardProps> = ({
   if (isBack) {
     return (
       <motion.div
-        layout
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1, rotate: rotation, y: isSelected ? -20 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -67,10 +64,6 @@ export const Card: React.FC<CardProps> = ({
         </div>
         {/* Gloss wrap */}
         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/40 to-white/0 pointer-events-none" />
-        
-        {cardCount && (
-          <span className="text-white font-black drop-shadow-md z-10">{cardCount}</span>
-        )}
       </motion.div>
     );
   }

@@ -7,20 +7,20 @@ interface MiddleDeckProps {
 }
 
 export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
-  const cardsWithRotation = useMemo(() => {
-    const getHashRot = (str: string, index: number) => {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      return ((hash + index * 17) % 60) - 30; // Random looking spread
-    };
+  const visibleCards = useMemo(() => {
+    const displayedCards = cards.slice(-5);
 
-    return cards.map((c, i) => ({
-      card: c,
-      rotation: getHashRot(c, i),
-      id: `${c}-${i}`, // Unique ID for AnimatePresence
-    })).slice(-5); // Only display top 5 to keep DOM light
+    return displayedCards.map((card, index) => {
+      const centeredIndex = index - (displayedCards.length - 1) / 2;
+
+      return {
+        card,
+        id: `${card}-${cards.length - displayedCards.length + index}`,
+        rotation: centeredIndex * 4,
+        xOffset: centeredIndex * 1.5,
+        yOffset: -index * 3,
+      };
+    });
   }, [cards]);
 
   return (
@@ -36,15 +36,15 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards }) => {
       
       <div className="relative w-28 h-44 flex items-center justify-center">
         <AnimatePresence>
-          {cardsWithRotation.map(({ card, rotation, id }, idx) => (
+          {visibleCards.map(({ card, rotation, xOffset, yOffset, id }, idx) => (
             <motion.div
-              layoutId={card} // Magical fly-in from hand!
               key={id}
-              initial={{ scale: 2, opacity: 0, y: -100 }}
+              initial={{ scale: 1.6, opacity: 0, y: -80 }}
               animate={{ 
                 scale: 1, 
                 opacity: 1, 
-                y: 0,
+                x: xOffset,
+                y: yOffset,
                 rotate: rotation,
                 zIndex: idx 
               }}
