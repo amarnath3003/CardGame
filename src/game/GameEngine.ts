@@ -499,6 +499,15 @@ export class GameEngine {
       return;
     }
 
+    // ✅ Add countdown guard matching canPlayerPlayCard
+    if (this.roundStartAt !== null) {
+      const readyAt = this.roundStartAt + this.roundStartDelayMs;
+      if (Date.now() < readyAt) {
+        console.log('[GameEngine] Cannot buy cards during round countdown.');
+        return;
+      }
+    }
+
     const buyer = this.getPlayer(buyerId);
     const target = this.getPlayer(targetId);
 
