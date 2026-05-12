@@ -9,9 +9,10 @@ import { RoundOverModal } from './RoundOverModal';
 import { LayoutMetrics } from '../types';
 
 export const GameScreen: React.FC = () => {
-  const { gameState, selectCard, placeCard, aiPlay, nextRound, localPlayerId } = useCardGame();
+  const { gameState, selectCard, placeCard, aiPlay, nextRound, buyCards, localPlayerId } = useCardGame();
   const { leaveLobby } = useMultiplayer();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [buyTargetId, setBuyTargetId] = useState<number | null>(null);
 
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -150,6 +151,11 @@ export const GameScreen: React.FC = () => {
                selectCard(idx);
             }
           }}
+          onBuyPlayer={() => {
+            if (index !== localPlayerId && !gameState.players[index].isOut && gameState.gameStatus === 'ROUND_ACTIVE' && gameState.middlePile.length === 0) {
+              setBuyTargetId(index);
+            }
+          }}
           layout={layout}
         />
       ))}
@@ -218,6 +224,46 @@ export const GameScreen: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setShowExitConfirm(false)}
+                  className="w-full rounded-full bg-white/10 py-3 text-lg font-bold text-white transition-all hover:bg-white/20"
+                >
+                  CANCEL
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {buyTargetId !== null && gameState.players[buyTargetId] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="w-full max-w-sm rounded-[2rem] border-4 border-white/20 bg-gray-900 p-8 text-center shadow-2xl"
+            >
+              <h2 className="mb-4 text-3xl font-black text-white uppercase tracking-tight">Buy Cards?</h2>
+              <p className="mb-8 text-lg font-medium text-gray-400">
+                Buy all cards from {gameState.players[buyTargetId].name}? They will immediately be SAFE and out of this game.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    buyCards(buyTargetId);
+                    setBuyTargetId(null);
+                  }}
+                  className="w-full rounded-full bg-blue-500 py-4 text-xl font-black text-white transition-all hover:bg-blue-600 active:scale-95 shadow-[0_0_20px_rgba(59,130,246,0.6)] border-2 border-blue-400"
+                >
+                  BUY CARDS
+                </button>
+                <button
+                  onClick={() => setBuyTargetId(null)}
                   className="w-full rounded-full bg-white/10 py-3 text-lg font-bold text-white transition-all hover:bg-white/20"
                 >
                   CANCEL

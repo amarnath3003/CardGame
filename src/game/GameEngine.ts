@@ -473,6 +473,43 @@ export class GameEngine {
     return fromPlayerId;
   }
 
+  buyAllCards(buyerId: number, targetId: number): void {
+    if (this.gameStatus !== 'ROUND_ACTIVE' || this.middlePile.length > 0) {
+      console.log('[GameEngine] Cannot buy cards mid-round or outside active round.');
+      return;
+    }
+
+    const buyer = this.getPlayer(buyerId);
+    const target = this.getPlayer(targetId);
+
+    if (buyer.isOut || target.isOut) {
+      console.log('[GameEngine] Cannot buy cards if either player is out.');
+      return;
+    }
+
+    const cardsToTransfer = [...target.hand];
+    target.hand = [];
+    buyer.addCards(cardsToTransfer);
+
+    console.log(`[GameEngine] Player ${buyerId} bought all cards from player ${targetId}.`);
+
+    this.lastEvents.push({
+      type: EVENT_TYPES.cardPlayed, // or a new type but string is fine
+      playerId: buyerId,
+      message: `${buyer.name} bought all cards from ${target.name}.`,
+    });
+
+    this.lastMessage = `${buyer.name} bought all cards from ${target.name}. ${target.name} is safe!`;
+
+    // Target player has 0 cards now, so this will mark them as isOut = true and safe
+    this.updatePlayerStatus();
+    this.recomputeActivePlayers();
+
+    if (this.checkGameOver()) {
+      return;
+    }
+  }
+
   updatePlayerStatus(): void {
     const newlyEliminated: number[] = [];
 

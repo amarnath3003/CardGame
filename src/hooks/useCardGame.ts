@@ -50,8 +50,13 @@ export const formatCardName = (card: string): string => {
 };
 
 export const useCardGame = () => {
-  const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound } = useMultiplayer();
+  const { gameState, localPlayerId, playCard: mpPlayCard, nextRound: mpNextRound, buyCards: mpBuyCards } = useMultiplayer();
   const [selectedCardIdx, setSelectedCardIdx] = useState<number | null>(null);
+
+  const buyCards = useCallback((targetPlayerId: number) => {
+    if (!gameState) return;
+    mpBuyCards(targetPlayerId, localPlayerId);
+  }, [gameState, localPlayerId, mpBuyCards]);
 
   const selectCard = useCallback(
     (index: number) => {
@@ -116,5 +121,6 @@ export const useCardGame = () => {
     placeCard,
     aiPlay,
     nextRound,
+    buyCards,
   };
 };

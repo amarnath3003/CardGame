@@ -15,6 +15,7 @@ interface PlayerHandProps {
   selectedCardIdx: number | null;
   onCardSelect: (index: number) => void;
   layout: LayoutMetrics;
+  onBuyPlayer?: () => void;
 }
 
 const CARD_WIDTHS: Record<CardVisualSize, number> = {
@@ -113,6 +114,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   selectedCardIdx,
   onCardSelect,
   layout,
+  onBuyPlayer,
 }) => {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
@@ -303,6 +305,16 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           <div className="rounded-full border border-white/30 bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_10px_rgba(0,0,0,0.35)]">
             {isOut ? 'SAFE' : playerName.replace('Player ', 'P')}
           </div>
+          
+          {!isLocalPlayer && !isOut && onBuyPlayer && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
+              className="pointer-events-auto mt-1 rounded-lg bg-blue-500 px-2 py-1 text-white text-[9px] font-bold shadow-md hover:bg-blue-400 transition-colors uppercase"
+              title="Buy Cards"
+            >
+              BUY
+            </button>
+          )}
         </motion.div>
       </div>
     );
@@ -354,13 +366,22 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
         </div>
 
         <div
-          className={`mt-2 rounded-full border border-white/20 bg-gradient-to-r from-black/80 via-black/60 to-black/80 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md ${
+          className={`flex items-center gap-2 mt-2 rounded-full border border-white/20 bg-gradient-to-r from-black/80 via-black/60 to-black/80 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md pointer-events-auto ${
             compact ? 'py-1' : 'py-1.5'
           }`}
         >
           <p className={`text-center font-bold text-white ${compact ? 'text-[10px] tracking-[0.18em]' : 'text-sm tracking-wide'}`}>
             {isOut ? `${playerName} • SAFE` : playerName}
           </p>
+          {!isLocalPlayer && !isOut && onBuyPlayer && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
+              className={`rounded-lg bg-blue-500 px-2 text-white shadow-md hover:bg-blue-400 transition-colors font-bold uppercase ${compact ? 'text-[9px] py-0.5' : 'text-xs py-1'}`}
+              title="Buy Cards"
+            >
+              BUY
+            </button>
+          )}
         </div>
       </motion.div>
 

@@ -9,7 +9,8 @@ export type MultiplayerMessage =
   | { type: 'START_GAME'; gameState: GameState }
   | { type: 'GAME_STATE_UPDATE'; gameState: GameState }
   | { type: 'PLAY_CARD'; cardId: string; playerId: number }
-  | { type: 'NEXT_ROUND'; playerId: number };
+  | { type: 'NEXT_ROUND'; playerId: number }
+  | { type: 'BUY_CARDS'; targetPlayerId: number; buyerId: number };
 
 interface MultiplayerContextValue {
   isHost: boolean;
@@ -24,6 +25,7 @@ interface MultiplayerContextValue {
   startGame: () => void; // Host only
   playCard: (playerId: number, cardId: string) => void;
   nextRound: (playerId: number) => void;
+  buyCards: (targetPlayerId: number, buyerId: number) => void;
 
   error: string | null;
 }
@@ -149,6 +151,10 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         }
         else if (msg.type === 'NEXT_ROUND' && hostEngineRef.current) {
           hostEngineRef.current.startNextRound();
+          syncEngineState();
+        }
+        else if (msg.type === 'BUY_CARDS' && hostEngineRef.current) {
+          hostEngineRef.current.buyAllCards(msg.buyerId, msg.targetPlayerId);
           syncEngineState();
         }
 
@@ -291,6 +297,18 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
+  const buyCards = (targetPlayerId: number, buyerId: number) => {
+    if (isHost && hostEngineRef.current) {
+      hostEngineRef.current.buyAllCards(buyerId, targetPlayerId);
+      syncEngineState();
+    } else {
+      const conn = connectionsRef.current.get('host');
+      if (conn?.open) {
+        conn.send({ type: 'BUY_CARDS', targetPlayerId, buyerId });
+      }
+    }
+  };
+
 
 
   // Auto AI Play for Host
@@ -330,6 +348,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       startGame,
       playCard,
       nextRound,
+      buyCards,
 
       error
     }}>
