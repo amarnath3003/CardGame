@@ -127,8 +127,7 @@ export const useCardGame = () => {
   }, [gameState, localPlayerId, mpNextRound]);
 
   return {
-    // @ts-ignore
-    gameState: gameState ? { ...gameState, selectedCardIdx } : null,
+    gameState: gameState ? ({ ...gameState, selectedCardIdx } as GameState & { selectedCardIdx: number | null }) : null,
     localPlayerId,
     legalMoves: gameState?.players[localPlayerId]?.legalMoves ?? [],
     selectCard,
