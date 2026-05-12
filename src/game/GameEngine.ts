@@ -520,6 +520,11 @@ export class GameEngine {
     this.updatePlayerStatus();
     this.recomputeActivePlayers();
 
+    if (this.currentPlayerIndex === targetId && !this.gameOver) {
+      this.currentPlayerIndex = this.getNextActivePlayer(targetId);
+      this.lastMessage = `${target.name} is safe. ${this.players[this.currentPlayerIndex].name} is up next.`;
+    }
+
     if (this.checkGameOver()) {
       return;
     }
