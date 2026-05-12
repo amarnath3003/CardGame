@@ -176,8 +176,8 @@ const CompactSideStack = memo(function CompactSideStack({
               e.stopPropagation();
               onBuyPlayer();
             }}
-            disabled={!isCountingDown}
-            className={`pointer-events-auto mt-1 rounded-lg px-2 py-1 text-white text-[9px] font-bold shadow-md transition-colors uppercase ${isCountingDown
+            disabled={isCountingDown}
+            className={`pointer-events-auto mt-1 rounded-lg px-2 py-1 text-white text-[9px] font-bold shadow-md transition-colors uppercase ${!isCountingDown
               ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
               : 'bg-gray-400 cursor-not-allowed opacity-60'
               }`}
@@ -358,9 +358,9 @@ export const PlayerHand = memo(function PlayerHand({
                   e.stopPropagation();
                   onBuyPlayer();
                 }}
-                disabled={!isCountingDown}
+                disabled={isCountingDown}
                 className={`rounded-lg px-2 text-white shadow-md transition-colors font-bold uppercase whitespace-nowrap ${compact ? 'text-[9px] py-0.5' : 'text-xs py-1'
-                  } ${isCountingDown
+                  } ${!isCountingDown
                     ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
                     : 'bg-gray-400 cursor-not-allowed opacity-60'
                   }`}
