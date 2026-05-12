@@ -8,6 +8,8 @@
 
 A high-energy, arcade-style multiplayer card game set against a playful sky-and-horizon backdrop. Experience the thrill of "Punishment" mechanics where your strongest card could be your biggest liability.
 
+### [🎮 Play SEETU Online](https://card-game-hazel-nu.vercel.app/)
+
 ---
 
 ## 📸 Visual Showcase
