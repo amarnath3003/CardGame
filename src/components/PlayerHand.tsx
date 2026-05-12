@@ -388,7 +388,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
       <div
         className={`relative flex items-end justify-center pointer-events-auto ${
           compact ? 'overflow-visible' : 'overflow-visible'
-        }`}
+        } ${!compact && (position === 'left' || position === 'right') && !isLocalPlayer ? 'mb-24' : ''}`}
         style={{ width: `${cardsAreaWidth}px`, height: `${handHeight}px` }}
       >
         <AnimatePresence>
