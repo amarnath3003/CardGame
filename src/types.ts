@@ -74,6 +74,8 @@ export interface GameState {
   requiredSuit: string | null;
   leadSuit: string | null;
   roundNumber: number;
+  roundStartAt: number | null;
+  roundStartDelayMs: number;
   roundActiveCount: number;
   trickPlays: { card: string; playerId: number; isCut: boolean }[];
   roundOutcome: RoundOutcome | null;

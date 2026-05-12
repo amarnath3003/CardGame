@@ -64,6 +64,13 @@ export const useCardGame = () => {
         return;
       }
 
+      if (gameState.roundStartAt !== null) {
+        const readyAt = gameState.roundStartAt + gameState.roundStartDelayMs;
+        if (Date.now() < readyAt) {
+          return;
+        }
+      }
+
       const humanPlayer = gameState.players[localPlayerId];
       const cardCode = humanPlayer.cards[index];
 
@@ -87,6 +94,13 @@ export const useCardGame = () => {
   const placeCard = useCallback(() => {
     if (!gameState || selectedCardIdx === null || gameState.currentPlayer !== localPlayerId) {
       return;
+    }
+
+    if (gameState.roundStartAt !== null) {
+      const readyAt = gameState.roundStartAt + gameState.roundStartDelayMs;
+      if (Date.now() < readyAt) {
+        return;
+      }
     }
 
     const humanPlayer = gameState.players[localPlayerId];

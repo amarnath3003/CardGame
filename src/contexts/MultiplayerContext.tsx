@@ -318,6 +318,9 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const currentSlot = lobbyState?.slots[gameState.currentPlayer];
     if (currentSlot && currentSlot.type === 'ai') {
+      const roundStartAt = gameState.roundStartAt ?? 0;
+      const roundDelayMs = gameState.roundStartDelayMs ?? 0;
+      const remainingMs = Math.max(0, roundStartAt + roundDelayMs - Date.now());
       const timer = setTimeout(() => {
         if (hostEngineRef.current) {
           const legalMoves = hostEngineRef.current.getLegalMoves(gameState.currentPlayer);
@@ -327,7 +330,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             syncEngineState();
           }
         }
-      }, 1500);
+      }, remainingMs + 1500);
       return () => clearTimeout(timer);
     }
   }, [isHost, gameState, lobbyState]);

@@ -16,6 +16,7 @@ interface PlayerHandProps {
   onCardSelect: (index: number) => void;
   layout: LayoutMetrics;
   onBuyPlayer?: () => void;
+  roundCountdownMs?: number;
 }
 
 const CARD_WIDTHS: Record<CardVisualSize, number> = {
@@ -115,6 +116,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   onCardSelect,
   layout,
   onBuyPlayer,
+  roundCountdownMs = 0,
 }) => {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
@@ -309,8 +311,13 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           {!isLocalPlayer && !isOut && onBuyPlayer && (
             <button
               onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
-              className="pointer-events-auto mt-1 rounded-lg bg-blue-500 px-2 py-1 text-white text-[9px] font-bold shadow-md hover:bg-blue-400 transition-colors uppercase"
+              className={`pointer-events-auto mt-1 rounded-lg px-2 py-1 text-white text-[9px] font-bold shadow-md transition-colors uppercase ${
+                roundCountdownMs > 0
+                  ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
+                  : 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed opacity-60'
+              }`}
               title="Buy Cards"
+              disabled={roundCountdownMs === 0}
             >
               BUY
             </button>
@@ -376,8 +383,15 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           {!isLocalPlayer && !isOut && onBuyPlayer && (
             <button
               onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
-              className={`rounded-lg bg-blue-500 px-2 text-white shadow-md hover:bg-blue-400 transition-colors font-bold uppercase ${compact ? 'text-[9px] py-0.5' : 'text-xs py-1'}`}
+              className={`rounded-lg px-2 text-white shadow-md transition-colors font-bold uppercase ${
+                compact ? 'text-[9px] py-0.5' : 'text-xs py-1'
+              } ${
+                roundCountdownMs > 0
+                  ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
+                  : 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed opacity-60'
+              }`}
               title="Buy Cards"
+              disabled={roundCountdownMs === 0}
             >
               BUY
             </button>

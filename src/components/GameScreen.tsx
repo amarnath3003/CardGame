@@ -13,6 +13,7 @@ export const GameScreen: React.FC = () => {
   const { leaveLobby } = useMultiplayer();
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [buyTargetId, setBuyTargetId] = useState<number | null>(null);
+  const [roundCountdownMs, setRoundCountdownMs] = useState(0);
 
   const [viewport, setViewport] = useState(() => ({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
@@ -41,6 +42,23 @@ export const GameScreen: React.FC = () => {
   }, [viewport.height, viewport.width]);
 
   useEffect(() => {
+    if (!gameState || gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.roundStartAt === null) {
+      setRoundCountdownMs(0);
+      return;
+    }
+
+    const tick = () => {
+      const readyAt = gameState.roundStartAt + gameState.roundStartDelayMs;
+      const remaining = Math.max(0, readyAt - Date.now());
+      setRoundCountdownMs(remaining);
+    };
+
+    tick();
+    const interval = setInterval(tick, 100);
+    return () => clearInterval(interval);
+  }, [gameState?.roundStartAt, gameState?.roundStartDelayMs, gameState?.gameStatus, gameState?.roundNumber]);
+
+  useEffect(() => {
     if (!gameState || gameState.gameStatus !== 'ROUND_ACTIVE' || gameState.currentPlayer === localPlayerId) {
       return;
     }
@@ -51,6 +69,8 @@ export const GameScreen: React.FC = () => {
   if (!gameState) {
     return null;
   }
+
+  const roundCountdownSec = Math.max(0, Math.ceil(roundCountdownMs / 1000));
 
   // Rotate player positions based on localPlayerId
   const positions = ['bottom', 'left', 'top', 'right'] as const;
@@ -101,12 +121,51 @@ export const GameScreen: React.FC = () => {
         </p>
       </div>
 
+      <AnimatePresence>
+        {roundCountdownMs > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+          >
+            <div className="relative flex items-center justify-center">
+              <svg
+                className="absolute"
+                width={layout.isCompactLandscape ? '140' : '220'}
+                height={layout.isCompactLandscape ? '140' : '220'}
+                viewBox="0 0 220 220"
+              >
+                <circle
+                  cx="110"
+                  cy="110"
+                  r="100"
+                  fill="rgba(0, 0, 0, 0.7)"
+                  stroke="rgba(255, 255, 255, 0.3)"
+                  strokeWidth="3"
+                />
+              </svg>
+              <div className="relative flex flex-col items-center justify-center">
+                <span className={`font-black text-white drop-shadow-lg ${layout.isCompactLandscape ? 'text-4xl' : 'text-6xl md:text-7xl'}`}>
+                  {roundCountdownSec}
+                </span>
+                <span className={`font-bold text-white/90 drop-shadow-md tracking-widest ${layout.isCompactLandscape ? 'mt-1 text-xs' : 'mt-2 text-lg md:text-xl'}`}>
+                  STARTS IN
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
 
 
       <AnimatePresence>
         {gameState.gameStatus === 'ROUND_ACTIVE' &&
           gameState.currentPlayer === localPlayerId &&
-          gameState.selectedCardIdx !== null && (
+          gameState.selectedCardIdx !== null &&
+          roundCountdownSec <= 0 && (
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -156,6 +215,7 @@ export const GameScreen: React.FC = () => {
               setBuyTargetId(index);
             }
           }}
+          roundCountdownMs={roundCountdownMs}
           layout={layout}
         />
       ))}

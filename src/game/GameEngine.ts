@@ -28,6 +28,8 @@ export class GameEngine {
   activePlayers: number[];
   lastEvents: GameEvent[];
   lastMessage: string;
+  roundStartAt: number | null;
+  roundStartDelayMs: number;
 
   constructor(playerNames: string[] = DEFAULT_PLAYER_NAMES) {
     this.players = playerNames.map((name, index) => new Player(index, name, index === 0));
@@ -50,6 +52,8 @@ export class GameEngine {
     this.activePlayers = [];
     this.lastEvents = [];
     this.lastMessage = '';
+    this.roundStartAt = null;
+    this.roundStartDelayMs = 5000;
   }
 
   initializeGame(): GameState {
@@ -84,6 +88,7 @@ export class GameEngine {
     this.roundActiveCount = this.activePlayers.length;
     this.gameStatus = 'ROUND_ACTIVE';
     this.leadSuit = 'spades';
+    this.roundStartAt = Date.now();
 
     const openingCard = this.players[aceOfSpadesOwner.playerIndex].removeCard(aceOfSpadesOwner.cardId);
 
@@ -149,6 +154,8 @@ export class GameEngine {
       requiredSuit: this.leadSuit,
       leadSuit: this.leadSuit,
       roundNumber: this.roundNumber,
+      roundStartAt: this.roundStartAt,
+      roundStartDelayMs: this.roundStartDelayMs,
       roundActiveCount: this.roundActiveCount,
       trickPlays: this.middlePile.map((entry) => ({
         playerId: entry.playerId,
@@ -207,6 +214,13 @@ export class GameEngine {
 
     if (this.gameStatus !== 'ROUND_ACTIVE') {
       return { valid: false, message: 'Round is not ready for a new play yet.' };
+    }
+
+    if (this.roundStartAt !== null) {
+      const readyAt = this.roundStartAt + this.roundStartDelayMs;
+      if (Date.now() < readyAt) {
+        return { valid: false, message: 'Round countdown in progress.' };
+      }
     }
 
     if (playerId !== this.currentPlayerIndex) {
@@ -445,6 +459,7 @@ export class GameEngine {
     this.cutCard = null;
     this.gameStatus = 'ROUND_ACTIVE';
     this.roundActiveCount = this.activePlayers.length;
+    this.roundStartAt = Date.now();
     this.lastEvents = [
       {
         type: EVENT_TYPES.roundStarted,
