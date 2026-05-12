@@ -15,16 +15,10 @@ A high-energy, arcade-style multiplayer card game set against a playful sky-and-
 <p align="center">
   <img src="docs/images/home_screen.png" width="800" alt="SEETU Home Screen">
   <br>
-  <i>The vibrant main menu featuring Arcade-style UI and glossy, toy-like surfaces.</i>
-</p>
-
-<p align="center">
-  <img src="docs/images/ai_selection.png" width="400" alt="AI Selection">
   <img src="docs/images/lobby.png" width="400" alt="Multiplayer Lobby">
   <br>
   <img src="docs/images/gameplay.png" width="800" alt="Gameplay Board">
   <br>
-  <i>From AI selection and Multiplayer Lobbies to the immersive sky-table gameplay.</i>
 </p>
 
 ---
