@@ -94,8 +94,11 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
 
     if (autoStart) {
-      const names = initialLobby.slots.map(s => s.type === 'empty' ? 'AI Bot' : s.name);
-      hostEngineRef.current = new GameEngine(names);
+      const players = initialLobby.slots.map(s => ({
+        name: s.type === 'human' ? s.name : 'AI Bot',
+        avatarIndex: s.avatarIndex ?? s.index
+      }));
+      hostEngineRef.current = new GameEngine(players);
       const initialGameState = hostEngineRef.current.initializeGame();
       
       initialGameState.players.forEach((p, idx) => {
@@ -175,7 +178,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             newLobby.slots[pId] = {
               index: pId,
               type: isGameActive ? 'ai' : 'empty',
-              name: isGameActive ? 'AI Bot (Replaced)' : 'Open Slot',
+              name: isGameActive ? 'AI Bot' : 'Open Slot',
               avatarIndex: isGameActive ? (pId + 2) % 10 : null,
               difficulty: 'Normal'
             };
@@ -183,10 +186,10 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             // If game is active, we should also update the player type in GameEngine
             if (isGameActive && hostEngineRef.current) {
                const player = hostEngineRef.current.players[pId];
-               if (player) {
-                  player.isHuman = false;
-                  player.name = 'AI Bot (Replaced)';
-               }
+                if (player) {
+                   player.isHuman = false;
+                   player.name = 'AI Bot';
+                }
                syncEngineState();
             }
 
@@ -258,9 +261,12 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const startGame = () => {
     if (isHost && lobbyState) {
-      const names = lobbyState.slots.map(s => s.type === 'empty' ? 'AI Bot' : s.name);
+      const players = lobbyState.slots.map(s => ({
+        name: s.type === 'human' ? s.name : 'AI Bot',
+        avatarIndex: s.avatarIndex ?? s.index
+      }));
       // Ensure empty slots act as AI temporarily if they weren't explicitly added
-      hostEngineRef.current = new GameEngine(names);
+      hostEngineRef.current = new GameEngine(players);
       const initialGameState = hostEngineRef.current.initializeGame();
       
       // Update human vs AI tags in the engine state based on the lobby

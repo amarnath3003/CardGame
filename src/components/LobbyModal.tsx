@@ -118,6 +118,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     label={slot.type === 'empty' ? 'Open' : slot.name}
                     size="sm"
                     highlight={isOwnerSlot || isLocalPlayer}
+                    isAi={isAi}
                   />
                   <div className="flex-1 overflow-hidden">
                     <div className="flex items-center gap-1 flex-wrap">

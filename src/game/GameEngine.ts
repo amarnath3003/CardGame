@@ -31,8 +31,12 @@ export class GameEngine {
   roundStartAt: number | null;
   roundStartDelayMs: number;
 
-  constructor(playerNames: string[] = DEFAULT_PLAYER_NAMES) {
-    this.players = playerNames.map((name, index) => new Player(index, name, index === 0));
+  constructor(players: { name: string; avatarIndex: number }[] = []) {
+    if (players.length === 0) {
+      this.players = DEFAULT_PLAYER_NAMES.map((name, index) => new Player(index, name, index === 0, index));
+    } else {
+      this.players = players.map((p, index) => new Player(index, p.name, index === 0, p.avatarIndex));
+    }
     this.currentPlayerIndex = 0;
     this.startingPlayerIndex = 0;
     this.leadSuit = null;
@@ -128,6 +132,7 @@ export class GameEngine {
       players: this.players.map((player) => ({
         id: player.id,
         name: player.name,
+        avatarIndex: player.avatarIndex,
         cards: player.hand.map((card) => getCardCode(card)),
         cardIds: player.hand.map((card) => card.id),
         cardCount: player.hand.length,

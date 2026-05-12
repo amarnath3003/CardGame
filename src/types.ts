@@ -12,6 +12,7 @@ export interface Card {
 export interface PlayerHand {
   id: number;
   name: string;
+  avatarIndex: number;
   cards: string[];
   cardIds: string[];
   cardCount: number;

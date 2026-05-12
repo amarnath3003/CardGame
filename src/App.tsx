@@ -94,7 +94,7 @@ export default function App() {
       slots[i] = {
         index: i,
         type: 'ai',
-        name: getRandomName(),
+        name: 'AI Bot',
         avatarIndex: getAiAvatarIndex(i),
         difficulty: playAiDifficulty,
       };
@@ -144,7 +144,7 @@ export default function App() {
     updateLobbySlotHelper(slotIndex, (slot) => ({
       ...slot,
       type: 'ai',
-      name: getRandomName(),
+      name: 'AI Bot',
       avatarIndex: getAiAvatarIndex(slotIndex),
       difficulty: DEFAULT_DIFFICULTY,
     }));

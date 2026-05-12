@@ -18,6 +18,7 @@ interface PlayerHandProps {
   onBuyPlayer?: () => void;
   roundCountdownMs?: number;
   legalMoves?: string[];
+  avatarIndex: number;
 }
 
 const CARD_WIDTHS: Record<CardVisualSize, number> = {
@@ -27,79 +28,75 @@ const CARD_WIDTHS: Record<CardVisualSize, number> = {
   lg: 80,
 };
 
-const getAvatarIcon = (position: string, compact = false) => {
-  const sizeClass = compact ? 'w-4 h-4' : 'w-8 h-8';
-
-  switch (position) {
-    case 'bottom':
-      return <User className={`${sizeClass} text-blue-500`} />;
-    case 'top':
-      return <Cpu className={`${sizeClass} text-red-500`} />;
-    case 'left':
-      return <Sparkles className={`${sizeClass} text-purple-500`} />;
-    case 'right':
-      return <Rocket className={`${sizeClass} text-orange-500`} />;
-    default:
-      return <User className={`${sizeClass} text-gray-500`} />;
-  }
-};
+import { AvatarBadge } from './AvatarBadge';
 
 const TimerHighlight: React.FC<{ compact?: boolean }> = ({ compact }) => {
-  const pathData = "M 50 5 L 25 5 A 20 20 0 0 0 5 25 L 5 75 A 20 20 0 0 0 25 95 L 75 95 A 20 20 0 0 0 95 75 L 95 25 A 20 20 0 0 0 75 5 Z";
+  // Tailwind rounded-2xl is exactly 16px. We want a ~5px gap. Total desired radius = ~21px.
+  // Standard container (compact=false) is 64x64px. SVG scale = 0.64.
+  // Compact container (compact=true) is 44x44px. SVG scale = 0.44.
   
+  const offset = compact ? 11 : 8;
+  const size = 100 + (offset * 2);
+  const rx = compact ? 47 : 33; // ~21px / scale
+  const strokeWOuter = compact ? "20" : "16";
+  const strokeWInner = compact ? "8" : "6";
+  const bgStrokeW = compact ? "8" : "6";
+  const blur = compact ? "8px" : "6px";
+
   return (
     <svg 
       className="absolute inset-0 h-full w-full pointer-events-none z-10" 
       viewBox="0 0 100 100" 
-      style={{ 
-        overflow: 'visible', 
-        transform: compact ? 'scale(1.35)' : 'scale(1.25)' 
-      }}
+      style={{ overflow: 'visible' }}
     >
-      {/* Background Track for the timer */}
-      <path
-        d={pathData}
+      {/* Subtle black border line for fine differentiation */}
+      <rect
+        x={-offset} y={-offset} width={size} height={size} rx={rx}
         fill="none"
-        stroke="rgba(0,0,0,0.1)"
-        strokeWidth={compact ? "9" : "7"}
-        strokeLinecap="round"
+        stroke="rgba(0,0,0,0.5)"
+        strokeWidth={Number(strokeWOuter) + 0.5}
+      />
+
+      {/* Subtle Background Track */}
+      <rect
+        x={-offset} y={-offset} width={size} height={size} rx={rx}
+        fill="none"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth={bgStrokeW}
       />
       
-      {/* Outer Glow Path (pulsing) */}
-      <motion.path
-        d={pathData}
+      {/* Neon Outer Glow */}
+      <motion.rect
+        x={-offset} y={-offset} width={size} height={size} rx={rx}
         fill="none"
-        strokeWidth={compact ? "14" : "12"}
+        strokeWidth={strokeWOuter}
         strokeLinecap="round"
-        initial={{ pathLength: 1, stroke: "#4ade80", opacity: 0.4 }}
+        initial={{ pathLength: 1, stroke: "#4ade80", opacity: 0.3 }}
         animate={{ 
           pathLength: 0,
-          stroke: ["#4ade80", "#facc15", "#ef4444"],
-          opacity: [0.4, 0.7, 0.4]
+          stroke: ["#4ade80", "#eab308", "#ef4444"],
+          opacity: [0.3, 0.8, 0.3]
         }}
         transition={{ 
           pathLength: { duration: 15, ease: "linear" },
           stroke: { duration: 15, ease: "linear" },
           opacity: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
         }}
-        style={{ filter: 'blur(5px)' }}
+        style={{ filter: `blur(${blur})` }}
       />
 
-      {/* Main Animated Path */}
-      <motion.path
-        d={pathData}
+      {/* Crisp Core Line */}
+      <motion.rect
+        x={-offset} y={-offset} width={size} height={size} rx={rx}
         fill="none"
-        strokeWidth={compact ? "8" : "6"}
+        strokeWidth={strokeWInner}
         strokeLinecap="round"
-        initial={{ pathLength: 1, stroke: "#4ade80" }}
+        initial={{ pathLength: 1, stroke: "#86efac" }}
         animate={{ 
           pathLength: 0,
-          stroke: ["#4ade80", "#facc15", "#ef4444"]
+          stroke: ["#86efac", "#fef08a", "#fca5a5"]
         }}
         transition={{ duration: 15, ease: "linear" }}
-        style={{ 
-          filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.8))'
-        }}
       />
     </svg>
   );
@@ -119,6 +116,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   onBuyPlayer,
   roundCountdownMs = 0,
   legalMoves = [],
+  avatarIndex,
 }) => {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
@@ -276,11 +274,13 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           className="flex flex-col items-center gap-2"
         >
           <div
-            className={`relative flex h-10 w-10 items-center justify-center rounded-2xl border bg-white shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
-              isCurrentPlayer ? 'border-yellow-400' : 'border-gray-200'
+            className={`relative h-10 w-10 flex items-center justify-center rounded-2xl border shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
+              isCurrentPlayer ? 'border-yellow-400' : 'border-white'
             }`}
           >
-            {getAvatarIcon(position, true)}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden flex items-center justify-center">
+               <AvatarBadge avatarIndex={avatarIndex} label={playerName} size="sm" highlight={isCurrentPlayer} isAi={!isHuman} />
+            </div>
             {isCurrentPlayer && <TimerHighlight compact={true} />}
           </div>
 
@@ -345,15 +345,17 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
         }}
         className={`${avatarClasses[position]} z-20 flex flex-col items-center pointer-events-none`}
       >
-        <div
-          className={`relative flex items-center justify-center rounded-2xl bg-white shadow-[0_8px_16px_rgba(0,0,0,0.3)] ${
-            compact ? 'h-11 w-11 border' : 'h-16 w-16 border-2'
-          } ${
-            isLocalPlayer ? 'border-green-400 ring-2 ring-green-400/45 shadow-[0_0_15px_rgba(74,222,128,0.5)]' :
-            isCurrentPlayer ? 'border-yellow-400 shadow-[0_0_25px_rgba(250,204,21,0.6)] ring-4 ring-yellow-400/30' : 'border-gray-200'
-          }`}
-        >
-          {getAvatarIcon(position, compact)}
+          <div
+            className={`relative flex items-center justify-center rounded-2xl shadow-[0_8px_16px_rgba(0,0,0,0.3)] ${
+              compact ? 'h-11 w-11' : 'h-16 w-16'
+            } ${
+              isLocalPlayer ? 'ring-2 ring-green-400/45 shadow-[0_0_15px_rgba(74,222,128,0.5)]' :
+              isCurrentPlayer ? 'shadow-[0_0_25px_rgba(250,204,21,0.6)] ring-4 ring-yellow-400/30' : ''
+            }`}
+          >
+            <div className="absolute inset-0 rounded-2xl overflow-hidden flex items-center justify-center">
+               <AvatarBadge avatarIndex={avatarIndex} label={playerName} size={compact ? 'sm' : 'md'} highlight={isCurrentPlayer} isAi={!isHuman} />
+            </div>
 
           {isLocalPlayer && (
             <div className={`absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.1em] text-white shadow-md z-30`}>
@@ -365,7 +367,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
 
           {!isHuman && (
             <div
-              className={`absolute rounded-full border-2 border-white bg-red-500 font-black text-white shadow-sm ${
+              className={`absolute rounded-full border-2 border-white bg-red-500 font-black text-white shadow-sm z-40 ${
                 compact ? '-bottom-1.5 -right-1.5 px-1.5 py-0.5 text-[10px]' : '-bottom-2 -right-2 px-2 py-1 text-xs'
               }`}
             >
@@ -374,29 +376,33 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           )}
         </div>
 
-        <div
-          className={`flex items-center gap-2 mt-2 rounded-full border border-white bg-gray-900 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] pointer-events-auto ${
-            compact ? 'py-1' : 'py-1.5'
-          }`}
-        >
-          <p className={`text-center font-bold text-white ${compact ? 'text-[10px] tracking-[0.18em]' : 'text-sm tracking-wide'}`}>
-            {isOut ? `${playerName} • SAFE` : playerName}
-          </p>
+        <div className="relative flex items-center justify-center mt-2 pointer-events-none">
+          <div
+            className={`flex items-center justify-center rounded-full border border-white bg-gray-900 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] pointer-events-auto ${
+              compact ? 'py-1' : 'py-1.5'
+            }`}
+          >
+            <p className={`text-center font-bold text-white ${compact ? 'text-[10px] tracking-[0.18em]' : 'text-sm tracking-wide'}`}>
+              {isOut ? `${playerName} • SAFE` : playerName}
+            </p>
+          </div>
           {!isLocalPlayer && !isOut && onBuyPlayer && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
-              className={`rounded-lg px-2 text-white shadow-md transition-colors font-bold uppercase ${
-                compact ? 'text-[9px] py-0.5' : 'text-xs py-1'
-              } ${
-                roundCountdownMs > 0
-                  ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
-                  : 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed opacity-60'
-              }`}
-              title="Buy Cards"
-              disabled={roundCountdownMs === 0}
-            >
-              BUY
-            </button>
+            <div className="absolute left-full ml-1.5 md:ml-2 pointer-events-auto">
+              <button
+                onClick={(e) => { e.stopPropagation(); onBuyPlayer(); }}
+                className={`rounded-lg px-2 text-white shadow-md transition-colors font-bold uppercase whitespace-nowrap ${
+                  compact ? 'text-[9px] py-0.5' : 'text-xs py-1'
+                } ${
+                  roundCountdownMs > 0
+                    ? 'bg-yellow-500 hover:bg-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.9)]'
+                    : 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed opacity-60'
+                }`}
+                title="Buy Cards"
+                disabled={roundCountdownMs === 0}
+              >
+                BUY
+              </button>
+            </div>
           )}
         </div>
       </motion.div>

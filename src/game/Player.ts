@@ -5,14 +5,16 @@ import { compareCards } from './helpers';
 export class Player {
   id: number;
   name: string;
+  avatarIndex: number;
   isHuman: boolean;
   hand: GameCard[];
   isOut: boolean;
 
-  constructor(id: number, name: string, isHuman: boolean) {
+  constructor(id: number, name: string, isHuman: boolean, avatarIndex: number = 0) {
     this.id = id;
     this.name = name;
     this.isHuman = isHuman;
+    this.avatarIndex = avatarIndex;
     this.hand = [];
     this.isOut = false;
   }

@@ -198,6 +198,7 @@ export const GameScreen: React.FC = () => {
         <PlayerHand
           key={index}
           playerName={gameState.players[index].name}
+          avatarIndex={gameState.players[index].avatarIndex}
           cards={gameState.players[index].cards}
           position={position}
           isCurrentPlayer={gameState.currentPlayer === index}
