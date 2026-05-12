@@ -13,7 +13,7 @@ import { useMultiplayer } from './contexts/MultiplayerContext';
 type Screen = 'home' | 'game';
 type ActiveModal = 'play-ai' | 'join-room' | 'lobby' | null;
 
-const ROOM_BASE_URL = 'https://seetuatti.game/room';
+const ROOM_BASE_URL = 'https://card-game-hazel-nu.vercel.app/room';
 const DEFAULT_DIFFICULTY: AiDifficulty = 'Normal';
 
 export default function App() {
@@ -45,6 +45,15 @@ export default function App() {
       setActiveModal(null);
     }
   }, [error]);
+
+  // Handle auto-join from URL
+  useEffect(() => {
+    const pathMatch = window.location.pathname.match(/\/room\/([A-Z0-9]{6})$/i);
+    if (pathMatch && pathMatch[1] && !lobbyState && !gameState) {
+      const roomId = pathMatch[1].toUpperCase();
+      handleJoinRoom(roomId);
+    }
+  }, []);
 
   const getAiAvatarIndex = (slotIndex: number) =>
     (slotIndex + 2) % Math.max(1, AVATAR_PRESETS.length);
