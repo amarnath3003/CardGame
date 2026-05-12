@@ -577,15 +577,17 @@ export class GameEngine {
     if (this.activePlayers.length === 0) {
       this.gameOver = true;
       this.gameStatus = 'GAME_OVER';
+      // ✅ roundWinner played the highest card, so they "won" the last round
+      // and are the most deserving loser by game rules — keep but clarify comment
       this.loser = this.roundWinner;
       this.lastEvents.push({
         type: EVENT_TYPES.gameOver,
         playerId: this.loser ?? undefined,
-        message: 'All remaining players emptied their hands together; the round winner is used as the final loser tie-break.',
+        message: `${this.loser !== null ? this.players[this.loser].name : 'Unknown'} loses as the round winner when all players emptied hands simultaneously.`,
       });
       this.lastMessage =
         this.loser !== null
-          ? `${this.players[this.loser].name} loses the game on the final round tie-break.`
+          ? `${this.players[this.loser].name} loses — they won the final round but everyone finished simultaneously.`
           : 'Game over.';
 
       console.log('[GameEngine] Game over on simultaneous finish tie-break.');
