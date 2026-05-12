@@ -10,6 +10,8 @@ import { AVATAR_PRESETS } from './data/avatars';
 import { AiDifficulty, LobbySlot, LobbyState, Profile } from './types';
 import { useMultiplayer } from './contexts/MultiplayerContext';
 
+import { getRandomName } from './data/names';
+
 type Screen = 'home' | 'game';
 type ActiveModal = 'play-ai' | 'join-room' | 'lobby' | null;
 
@@ -33,10 +35,10 @@ export default function App() {
   const screen: Screen = gameState ? 'game' : 'home';
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [playAiDifficulty, setPlayAiDifficulty] = useState<AiDifficulty>('Normal');
-  const [profile, setProfile] = useState<Profile>({
-    name: 'Player One',
-    avatarIndex: 0,
-  });
+  const [profile, setProfile] = useState<Profile>(() => ({
+    name: getRandomName(),
+    avatarIndex: Math.floor(Math.random() * AVATAR_PRESETS.length),
+  }));
 
   // Handle errors
   useEffect(() => {
@@ -92,7 +94,7 @@ export default function App() {
       slots[i] = {
         index: i,
         type: 'ai',
-        name: 'AI Bot',
+        name: getRandomName(),
         avatarIndex: getAiAvatarIndex(i),
         difficulty: playAiDifficulty,
       };
@@ -142,7 +144,7 @@ export default function App() {
     updateLobbySlotHelper(slotIndex, (slot) => ({
       ...slot,
       type: 'ai',
-      name: 'AI Bot',
+      name: getRandomName(),
       avatarIndex: getAiAvatarIndex(slotIndex),
       difficulty: DEFAULT_DIFFICULTY,
     }));
