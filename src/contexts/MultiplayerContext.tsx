@@ -10,7 +10,8 @@ export type MultiplayerMessage =
   | { type: 'GAME_STATE_UPDATE'; gameState: GameState }
   | { type: 'PLAY_CARD'; cardId: string; playerId: number }
   | { type: 'NEXT_ROUND'; playerId: number }
-  | { type: 'BUY_CARDS'; targetPlayerId: number; buyerId: number };
+  | { type: 'BUY_CARDS'; targetPlayerId: number; buyerId: number }
+  | { type: 'PLAYER_ASSIGNED'; playerId: number };
 
 interface MultiplayerContextValue {
   isHost: boolean;
@@ -43,6 +44,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [peerId, setPeerId] = useState<string | null>(null);
   const [lobbyState, setLobbyState] = useState<LobbyState | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [localPlayerIdState, setLocalPlayerIdState] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   const peerRef = useRef<Peer | null>(null);
@@ -65,6 +67,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setIsHost(false);
     setPeerId(null);
     setError(null);
+    setLocalPlayerIdState(0);
     hostEngineRef.current = null;
   };
 
@@ -134,6 +137,11 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             }
             // Send update to all
             broadcast({ type: 'LOBBY_UPDATE', lobby: newLobby });
+            
+            // ✅ Tell THIS client their assigned index
+            if (joinedSlotIndex !== -1) {
+              conn.send({ type: 'PLAYER_ASSIGNED', playerId: joinedSlotIndex });
+            }
             return newLobby;
           });
           
@@ -227,6 +235,8 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           const msg = data as MultiplayerMessage;
           if (msg.type === 'LOBBY_UPDATE') {
             setLobbyState(msg.lobby);
+          } else if (msg.type === 'PLAYER_ASSIGNED') {
+            setLocalPlayerIdState(msg.playerId);
           } else if (msg.type === 'START_GAME') {
             setGameState(msg.gameState);
           } else if (msg.type === 'GAME_STATE_UPDATE') {
@@ -358,7 +368,7 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [isHost, gameState, lobbyState]);
 
-  const localPlayerId = isHost ? 0 : (lobbyState?.slots.findIndex(s => s.peerId === peerId) ?? 0);
+  const localPlayerId = isHost ? 0 : localPlayerIdState;
 
   return (
     <MultiplayerContext.Provider value={{
