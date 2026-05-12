@@ -28,6 +28,7 @@ interface CardProps {
   onClick?: () => void;
   isSelected?: boolean;
   isBack?: boolean;
+  isIllegal?: boolean;
   size?: CardVisualSize;
   rotation?: number;
   index?: number;
@@ -40,6 +41,7 @@ export const Card: React.FC<CardProps> = ({
   onClick,
   isSelected = false,
   isBack = false,
+  isIllegal = false,
   size = 'md',
   rotation = 0,
   index = 0,
@@ -94,7 +96,7 @@ export const Card: React.FC<CardProps> = ({
         ${sizeClasses[size]}
         bg-gradient-to-br ${bgGradient} border-white rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.5)]
         flex flex-col items-center justify-center
-        cursor-pointer
+        ${isIllegal ? 'cursor-not-allowed opacity-50 grayscale-[0.8]' : 'cursor-pointer'}
         ${isSelected ? 'ring-4 ring-yellow-400 ring-offset-2' : ''}
         relative overflow-hidden
       `}
