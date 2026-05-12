@@ -44,7 +44,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <button
           type="button"
           onClick={() => setIsProfileOpen(true)}
-          className="relative flex items-center justify-center rounded-full border-[3px] border-white/40 bg-white/10 p-1 shadow-[0_8px_20px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] backdrop-blur-md"
+          className="relative flex items-center justify-center rounded-full border-[3px] border-white bg-gray-800 p-1 shadow-[0_8px_20px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)]"
         >
           <AvatarBadge avatarIndex={profile.avatarIndex} label={profile.name} size="sm" />
           <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-[#1e40af] bg-green-400" />
@@ -84,16 +84,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   transform: `rotate(${c.rot}deg) translateY(${c.y}px)`
                 }}
               >
-                {/* Central ellipse backdrop */}
-                <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
+                {/* Central ellipse backdrop - made more solid */}
+                <div className="absolute w-[120%] h-[120%] rounded-full bg-white scale-[0.6] rotate-12 shadow-inner" />
                 
                 {/* Central big suit symbol */}
                 <div className={`absolute z-10 drop-shadow-md pb-3 md:pb-4 ${c.color}`}>
                   <Icon className="w-12 h-12 md:w-16 md:h-16 fill-current" />
                 </div>
 
-                {/* Gloss reflection overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent h-1/2 pointer-events-none z-20" />
+                {/* Gloss reflection overlay - REMOVED */}
 
                 {/* Top Left Corner */}
                 <div className={`absolute z-20 text-center top-2 left-2 md:top-2 md:left-2 ${c.color}`}>
@@ -117,7 +116,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* Buttons Menu */}
-        <div className="mt-10 landscape:mt-0 flex w-full max-w-sm flex-col gap-5 p-6 rounded-[2rem] border-4 border-white/20 bg-black/20 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_30px_rgba(255,255,255,0.05)] backdrop-blur-lg lg:max-w-md shrink-0">
+        <div className="mt-10 landscape:mt-0 flex w-full max-w-sm flex-col gap-5 p-6 rounded-[2rem] border-4 border-white bg-gray-900 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_30px_rgba(255,255,255,0.05)] lg:max-w-md shrink-0">
           <button
             type="button"
             onClick={onPlayAi}

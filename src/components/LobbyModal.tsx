@@ -67,15 +67,15 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
       <div className="flex flex-col gap-2 landscape:gap-1.5 md:gap-4">
 
         {/* ── Share link bar ── */}
-        <div className="flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 p-2 landscape:py-1.5 md:rounded-2xl md:p-3">
+        <div className="flex items-center gap-2 rounded-xl border border-white bg-gray-800 p-2 landscape:py-1.5 md:rounded-2xl md:p-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 shrink-0">Share</p>
-          <div className="truncate rounded-lg border border-white/40 bg-white/5 px-2 py-1 text-[10px] font-semibold text-white/90 flex-1 landscape:py-0.5">
+          <div className="truncate rounded-lg border border-white bg-gray-900 px-2 py-1 text-[10px] font-semibold text-white/90 flex-1 landscape:py-0.5">
             {lobby.roomLink}
           </div>
           <button
             type="button"
             onClick={handleCopyLink}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/70 bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/25 landscape:py-0.5"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white bg-gray-700 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-gray-600 landscape:py-0.5"
           >
             <Copy className="h-3 w-3" />
             {copied ? 'Copied' : 'Copy'}
@@ -87,7 +87,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
           <p className="text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-white/80">
             Players {playersJoined}/4
           </p>
-          <span className="rounded-full border border-white/40 bg-white/10 px-3 py-1 text-[8px] md:text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+          <span className="rounded-full border border-white bg-gray-800 px-3 py-1 text-[8px] md:text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
             {isOwner ? 'Host Controls' : 'Waiting'}
           </span>
         </div>
@@ -105,10 +105,10 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                 key={slot.index}
                 className={`flex flex-col gap-1.5 landscape:gap-1 md:gap-2 rounded-xl md:rounded-2xl border-2 p-2 landscape:p-1.5 md:p-3 ${
                   isLocalPlayer
-                    ? 'border-green-400 bg-green-400/10'
+                    ? 'border-green-400 bg-green-900'
                     : isOwnerSlot
-                    ? 'border-yellow-200 bg-yellow-200/10'
-                    : 'border-white/30 bg-white/10'
+                    ? 'border-yellow-200 bg-yellow-900'
+                    : 'border-white bg-gray-800'
                 }`}
               >
                 {/* Avatar + name row */}
@@ -144,7 +144,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                       onUpdateDifficulty(slot.index, event.target.value as AiDifficulty)
                     }
                     disabled={!isOwner}
-                    className="w-full rounded-lg border border-white/30 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-white outline-none transition focus:border-yellow-200 disabled:cursor-not-allowed disabled:opacity-70 md:rounded-xl md:border-2 md:px-3 md:py-2 md:text-sm"
+                    className="w-full rounded-lg border border-white bg-gray-900 px-2 py-0.5 text-[10px] font-semibold text-white outline-none transition focus:border-yellow-200 disabled:cursor-not-allowed disabled:opacity-70 md:rounded-xl md:border-2 md:px-3 md:py-2 md:text-sm"
                   >
                     {DIFFICULTIES.map((level) => (
                       <option key={level} value={level} className="text-slate-900">
@@ -160,7 +160,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     <button
                       type="button"
                       onClick={() => onAddAi(slot.index)}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/70 bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/25 md:border-2 md:px-3 md:py-1.5 md:text-xs"
+                      className="inline-flex items-center gap-1 rounded-full border border-white bg-gray-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-gray-600 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
                       <UserPlus className="h-3 w-3" />
                       Add AI
@@ -170,7 +170,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     <button
                       type="button"
                       onClick={() => onClearSlot(slot.index)}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/20 md:border-2 md:px-3 md:py-1.5 md:text-xs"
+                      className="inline-flex items-center gap-1 rounded-full border border-white bg-gray-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-gray-600 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
                       <UserX className="h-3 w-3" />
                       Remove AI
@@ -180,7 +180,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
                     <button
                       type="button"
                       onClick={() => onClearSlot(slot.index)}
-                      className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-white/20 md:border-2 md:px-3 md:py-1.5 md:text-xs"
+                      className="inline-flex items-center gap-1 rounded-full border border-white bg-gray-700 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-gray-600 md:border-2 md:px-3 md:py-1.5 md:text-xs"
                     >
                       <UserX className="h-3 w-3" />
                       Kick
@@ -210,7 +210,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
             <button
               type="button"
               onClick={onLeave}
-              className="rounded-full border border-white/70 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-white/20 md:border-2 md:px-5 md:py-2 md:text-xs"
+              className="rounded-full border border-white bg-gray-800 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition hover:bg-gray-700 md:border-2 md:px-5 md:py-2 md:text-xs"
             >
               Leave
             </button>

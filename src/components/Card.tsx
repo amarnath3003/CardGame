@@ -10,9 +10,9 @@ const SUIT_ICONS: { [key: string]: React.FC<any> } = {
 };
 
 const SUIT_COLORS: { [key: string]: string } = {
-  's': 'text-gray-800', 
-  'c': 'text-green-600', 
-  'h': 'text-red-500', 
+  's': 'text-gray-800',
+  'c': 'text-green-600',
+  'h': 'text-red-500',
   'd': 'text-blue-500',
 };
 
@@ -66,9 +66,9 @@ export const Card: React.FC<CardProps> = ({
         }}
       >
         <div className="absolute inset-2 border-2 border-white/30 rounded-lg flex items-center justify-center">
-           <div className="w-12 h-12 rounded-full border-[3px] border-white/20 flex items-center justify-center">
-              <div className="w-8 h-8 rounded-full bg-white/20 blur-[1px]" />
-           </div>
+          <div className="w-12 h-12 rounded-full border-[3px] border-white/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-white/20 blur-[1px]" />
+          </div>
         </div>
         {/* Gloss wrap */}
         <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/40 to-white/0 pointer-events-none" />
@@ -102,17 +102,16 @@ export const Card: React.FC<CardProps> = ({
     >
       {/* Central ellipse backdrop */}
       <div className="absolute w-[120%] h-[120%] rounded-full bg-white/80 scale-[0.6] rotate-12 shadow-inner" />
-      
+
       {/* Central big suit symbol */}
-      <span className={`absolute z-10 drop-shadow-sm flex items-center justify-center ${suitColor} ${
-        size === 'xs'
+      <span className={`absolute z-10 drop-shadow-sm flex items-center justify-center ${suitColor} ${size === 'xs'
           ? 'w-5 h-5 pb-1'
           : size === 'sm'
             ? 'w-6 h-6 pb-1 md:w-8 md:h-8'
             : size === 'md'
               ? 'w-10 h-10 pb-2 md:w-12 md:h-12'
               : 'w-12 h-12 pb-2 md:w-16 md:h-16 md:pb-3'
-      }`}>
+        }`}>
         <SuitIcon className="w-full h-full fill-current stroke-current" strokeWidth={1} />
       </span>
 
@@ -120,17 +119,15 @@ export const Card: React.FC<CardProps> = ({
       <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-transparent h-1/2 pointer-events-none z-20" />
 
       {/* Top Left Corner */}
-      <div className={`absolute z-20 flex flex-col items-center ${suitColor} ${
-        size === 'xs' ? 'top-1 left-1' : size === 'sm' ? 'top-1.5 left-1.5 md:top-2 md:left-2' : size === 'md' ? 'top-2 left-2 md:top-2.5 md:left-2.5' : 'top-2.5 left-2.5 md:top-3.5 md:left-3.5'
-      }`}>
+      <div className={`absolute z-20 flex flex-col items-center ${suitColor} ${size === 'xs' ? 'top-1 left-1' : size === 'sm' ? 'top-1.5 left-1.5 md:top-2 md:left-2' : size === 'md' ? 'top-2 left-2 md:top-2.5 md:left-2.5' : 'top-2.5 left-2.5 md:top-3.5 md:left-3.5'
+        }`}>
         <div className={`${size === 'xs' ? 'text-[8px]' : size === 'sm' ? 'text-[10px] md:text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'} font-black leading-none drop-shadow-sm`}>{rank}</div>
         <div className="mt-0.5"><SuitIcon className={`${size === 'xs' ? 'w-2 h-2' : size === 'sm' ? 'w-2.5 h-2.5 md:w-3 md:h-3' : size === 'md' ? 'w-3 h-3 md:w-3.5 md:h-3.5' : 'w-3.5 h-3.5 md:w-4 md:h-4'} fill-current stroke-current drop-shadow-sm`} strokeWidth={1} /></div>
       </div>
-      
+
       {/* Bottom Right Corner */}
-      <div className={`absolute z-20 rotate-180 flex flex-col items-center ${suitColor} ${
-        size === 'xs' ? 'bottom-1 right-1' : size === 'sm' ? 'bottom-1.5 right-1.5 md:bottom-2 md:right-2' : size === 'md' ? 'bottom-2 right-2 md:bottom-2.5 md:right-2.5' : 'bottom-2.5 right-2.5 md:bottom-3.5 md:right-3.5'
-      }`}>
+      <div className={`absolute z-20 rotate-180 flex flex-col items-center ${suitColor} ${size === 'xs' ? 'bottom-1 right-1' : size === 'sm' ? 'bottom-1.5 right-1.5 md:bottom-2 md:right-2' : size === 'md' ? 'bottom-2 right-2 md:bottom-2.5 md:right-2.5' : 'bottom-2.5 right-2.5 md:bottom-3.5 md:right-3.5'
+        }`}>
         <div className={`${size === 'xs' ? 'text-[8px]' : size === 'sm' ? 'text-[10px] md:text-xs' : size === 'md' ? 'text-xs md:text-sm' : 'text-sm md:text-base'} font-black leading-none drop-shadow-sm`}>{rank}</div>
         <div className="mt-0.5"><SuitIcon className={`${size === 'xs' ? 'w-2 h-2' : size === 'sm' ? 'w-2.5 h-2.5 md:w-3 md:h-3' : size === 'md' ? 'w-3 h-3 md:w-3.5 md:h-3.5' : 'w-3.5 h-3.5 md:w-4 md:h-4'} fill-current stroke-current drop-shadow-sm`} strokeWidth={1} /></div>
       </div>

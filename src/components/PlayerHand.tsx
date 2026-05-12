@@ -17,6 +17,7 @@ interface PlayerHandProps {
   layout: LayoutMetrics;
   onBuyPlayer?: () => void;
   roundCountdownMs?: number;
+  legalMoves?: string[];
 }
 
 const CARD_WIDTHS: Record<CardVisualSize, number> = {
@@ -117,6 +118,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
   layout,
   onBuyPlayer,
   roundCountdownMs = 0,
+  legalMoves = [],
 }) => {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
@@ -274,8 +276,8 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
           className="flex flex-col items-center gap-2"
         >
           <div
-            className={`relative flex h-10 w-10 items-center justify-center rounded-2xl border bg-white/95 shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
-              isCurrentPlayer ? 'border-yellow-400' : 'border-white/70'
+            className={`relative flex h-10 w-10 items-center justify-center rounded-2xl border bg-white shadow-[0_6px_14px_rgba(0,0,0,0.28)] ${
+              isCurrentPlayer ? 'border-yellow-400' : 'border-gray-200'
             }`}
           >
             {getAvatarIcon(position, true)}
@@ -304,7 +306,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
             </div>
           </div>
 
-          <div className="rounded-full border border-white/30 bg-black/65 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_10px_rgba(0,0,0,0.35)]">
+          <div className="rounded-full border border-white bg-gray-900 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white shadow-[0_4px_10px_rgba(0,0,0,0.35)]">
             {isOut ? 'SAFE' : playerName.replace('Player ', 'P')}
           </div>
           
@@ -373,7 +375,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
         </div>
 
         <div
-          className={`flex items-center gap-2 mt-2 rounded-full border border-white/20 bg-gradient-to-r from-black/80 via-black/60 to-black/80 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] backdrop-blur-md pointer-events-auto ${
+          className={`flex items-center gap-2 mt-2 rounded-full border border-white bg-gray-900 px-4 shadow-[0_4px_12px_rgba(0,0,0,0.5)] pointer-events-auto ${
             compact ? 'py-1' : 'py-1.5'
           }`}
         >
@@ -432,6 +434,7 @@ export const PlayerHand: React.FC<PlayerHandProps> = ({
                   value={cardValue}
                   isBack={!isLocalPlayer}
                   isSelected={isLocalPlayer && selectedCardIdx === idx}
+                  isIllegal={isLocalPlayer && isCurrentPlayer && legalMoves.length > 0 && !legalMoves.includes(cardValue)}
                   size={cardSize}
                   rotation={0}
                   index={idx}

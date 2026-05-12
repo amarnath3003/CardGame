@@ -28,7 +28,7 @@ export const ModalShell: React.FC<ModalShellProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/60 px-2 py-2 landscape:py-1 md:px-4 md:py-6 backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/90 px-2 py-2 landscape:py-1 md:px-4 md:py-6"
       onClick={onClose}
     >
       <motion.div
@@ -58,7 +58,7 @@ export const ModalShell: React.FC<ModalShellProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border-2 border-white/80 bg-white/10 p-1.5 text-white transition hover:bg-white/20 shrink-0"
+            className="rounded-full border-2 border-white bg-gray-800 p-1.5 text-white transition hover:bg-gray-700 shrink-0"
             aria-label="Close"
           >
             <X className="h-4 w-4" />

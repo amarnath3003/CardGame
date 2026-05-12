@@ -49,7 +49,7 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 py-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 px-4 py-4"
     >
       <motion.div
         initial={{ scale: 0.5, y: 100, rotateX: 45 }}
@@ -87,7 +87,7 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
           {title}
         </h1>
 
-        <div className={`rounded-2xl border border-white/20 bg-black/40 shadow-inner ${compact ? 'mb-5 px-4 py-3' : 'mb-8 p-6'}`}>
+        <div className={`rounded-2xl border border-white/40 bg-gray-900 shadow-inner ${compact ? 'mb-5 px-4 py-3' : 'mb-8 p-6'}`}>
           <p className={`font-bold text-blue-100 ${compact ? 'mb-2 text-sm' : 'mb-3 text-lg'}`}>
             {message}
           </p>
@@ -116,7 +116,7 @@ export const RoundOverModal: React.FC<RoundOverModalProps> = ({
           {onExit && (
             <button
               onClick={onExit}
-              className={`rounded-full border-white bg-white/10 font-black text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105 active:translate-y-[4px] ${
+              className={`rounded-full border-white bg-white/20 font-black text-white transition-all hover:bg-white/30 hover:scale-105 active:translate-y-[4px] ${
                 compact
                   ? 'border-2 px-5 py-2 text-sm uppercase tracking-widest'
                   : 'border-[3px] px-10 py-3 text-lg uppercase tracking-[0.2em] md:text-xl'

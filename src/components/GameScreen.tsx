@@ -99,7 +99,7 @@ export const GameScreen: React.FC = () => {
       <div className={`absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-40`}>
         <button
           onClick={() => setShowExitConfirm(true)}
-          className={`group flex items-center justify-center rounded-full border-2 border-white/40 bg-black/20 text-white backdrop-blur-md transition-all hover:bg-red-500/40 hover:border-red-400/60 ${
+          className={`group flex items-center justify-center rounded-full border-2 border-white bg-gray-800 text-white transition-all hover:bg-red-500 hover:border-red-400 ${
             layout.isCompactLandscape ? 'p-2' : 'p-3 md:p-4'
           }`}
           title="Leave Game"
@@ -112,7 +112,7 @@ export const GameScreen: React.FC = () => {
       </div>
 
       <div
-        className={`game-header absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white/50 bg-white/20 backdrop-blur-md shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
+        className={`game-header absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white bg-gray-800 shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${
           layout.isCompactLandscape ? 'px-4 py-1.5' : 'px-6 py-2 md:py-3'
         }`}
       >
@@ -205,6 +205,7 @@ export const GameScreen: React.FC = () => {
           isOut={gameState.players[index].isOut}
           isLocalPlayer={index === localPlayerId}
           selectedCardIdx={index === localPlayerId ? gameState.selectedCardIdx : null}
+          legalMoves={index === localPlayerId ? gameState.players[index].legalMoves : []}
           onCardSelect={(idx) => {
             if (index === localPlayerId) {
                selectCard(idx);
@@ -263,7 +264,7 @@ export const GameScreen: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -300,7 +301,7 @@ export const GameScreen: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
