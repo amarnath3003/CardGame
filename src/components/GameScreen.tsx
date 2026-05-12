@@ -323,6 +323,7 @@ export const GameScreen: React.FC = () => {
           // Pass boolean only — avoids PlayerHand re-rendering on every 100ms tick
           isCountingDown={isCountingDown}
           layout={layout}
+          roundNumber={gameState.roundNumber}
         />
       ))}
 

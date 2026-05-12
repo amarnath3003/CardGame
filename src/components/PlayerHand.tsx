@@ -21,6 +21,7 @@ interface PlayerHandProps {
   isCountingDown?: boolean;
   legalMoves?: string[];
   avatarIndex: number;
+  roundNumber?: number;
 }
 
 const CARD_WIDTHS: Record<CardVisualSize, number> = {
@@ -100,6 +101,7 @@ const CompactSideStack = memo(function CompactSideStack({
   isCountingDown,
   onBuyPlayer,
   isLocalPlayer,
+  roundNumber,
 }: Pick<
   PlayerHandProps,
   | 'playerName'
@@ -112,6 +114,7 @@ const CompactSideStack = memo(function CompactSideStack({
   | 'isCountingDown'
   | 'onBuyPlayer'
   | 'isLocalPlayer'
+  | 'roundNumber'
 >) {
   const posClass = POSITION_CLASSES_COMPACT[position];
 
@@ -139,7 +142,7 @@ const CompactSideStack = memo(function CompactSideStack({
               isAi={!isHuman}
             />
           </div>
-          {isCurrentPlayer && <TimerHighlight compact />}
+          {isCurrentPlayer && <TimerHighlight compact key={`timer-${roundNumber ?? 0}`} />}
         </div>
 
         <div className="relative h-24 w-14">
@@ -203,6 +206,7 @@ export const PlayerHand = memo(function PlayerHand({
   isCountingDown = false,
   legalMoves = [],
   avatarIndex,
+  roundNumber,
 }: PlayerHandProps) {
   const compact = layout.isCompactLandscape;
   const isSideSeat = position === 'left' || position === 'right';
@@ -269,6 +273,7 @@ export const PlayerHand = memo(function PlayerHand({
         isCountingDown={isCountingDown}
         onBuyPlayer={onBuyPlayer}
         isLocalPlayer={isLocalPlayer}
+        roundNumber={roundNumber}
       />
     );
   }
@@ -320,7 +325,7 @@ export const PlayerHand = memo(function PlayerHand({
             </div>
           )}
 
-          {isCurrentPlayer && <TimerHighlight compact={compact} />}
+          {isCurrentPlayer && <TimerHighlight compact={compact} key={`timer-${roundNumber ?? 0}`} />}
 
           {!isHuman && (
             <div
