@@ -83,7 +83,7 @@ export const LobbyModal: React.FC<LobbyModalProps> = ({
         </div>
 
         {/* ── Players label — hidden in landscape to save vertical space ── */}
-        <div className="hidden landscape:hidden flex items-center justify-between md:flex">
+        <div className="hidden md:flex items-center justify-between">
           <p className="text-[10px] md:text-sm font-bold uppercase tracking-[0.2em] text-white/80">
             Players {playersJoined}/4
           </p>
