@@ -327,16 +327,33 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const roundStartAt = gameState.roundStartAt ?? 0;
       const roundDelayMs = gameState.roundStartDelayMs ?? 0;
       const remainingMs = Math.max(0, roundStartAt + roundDelayMs - Date.now());
+
+      // ✅ Snapshot these values at schedule time
+      const expectedPlayer = gameState.currentPlayer;
+      const expectedRound = gameState.roundNumber;
+
       const timer = setTimeout(() => {
-        if (hostEngineRef.current) {
-          const legalMoves = hostEngineRef.current.getLegalMoves(gameState.currentPlayer);
-          if (legalMoves.length > 0) {
-            const chosenMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
-            hostEngineRef.current.playCard(gameState.currentPlayer, chosenMove.id);
-            syncEngineState();
-          }
+        const engine = hostEngineRef.current;
+        if (!engine) return;
+
+        // ✅ Verify game state hasn't advanced since we scheduled
+        const currentState = engine.getState();
+        if (
+          currentState.currentPlayer !== expectedPlayer ||
+          currentState.roundNumber !== expectedRound ||
+          currentState.gameStatus !== 'ROUND_ACTIVE'
+        ) {
+          return; // stale — a human or other AI already moved
+        }
+
+        const legalMoves = engine.getLegalMoves(expectedPlayer);
+        if (legalMoves.length > 0) {
+          const chosenMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+          engine.playCard(expectedPlayer, chosenMove.id);
+          syncEngineState();
         }
       }, remainingMs + 1500);
+
       return () => clearTimeout(timer);
     }
   }, [isHost, gameState, lobbyState]);
