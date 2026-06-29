@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Peer, { DataConnection } from 'peerjs';
-import { GameState, LobbyState, Profile } from '../types';
+import { AiDifficulty, GameState, LobbyState, Profile } from '../types';
 import { GameEngine } from '../game/GameEngine';
+import { chooseAiCard } from '../game/ai/aiAgent';
 
 export type MultiplayerMessage = 
   | { type: 'JOIN'; profile: Profile }
@@ -341,6 +342,8 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       // ✅ Snapshot these values at schedule time
       const expectedPlayer = gameState.currentPlayer;
       const expectedRound = gameState.roundNumber;
+      // Difficulty for this AI seat drives how the trained policy plays.
+      const difficulty: AiDifficulty = currentSlot.difficulty ?? 'Normal';
 
       const timer = setTimeout(() => {
         const engine = hostEngineRef.current;
@@ -356,10 +359,10 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           return; // stale — a human or other AI already moved
         }
 
-        const legalMoves = engine.getLegalMoves(expectedPlayer);
-        if (legalMoves.length > 0) {
-          const chosenMove = legalMoves[Math.floor(Math.random() * legalMoves.length)];
-          engine.playCard(expectedPlayer, chosenMove.id);
+        // Trained self-play policy chooses the card for this difficulty tier.
+        const chosenCardId = chooseAiCard(engine, expectedPlayer, difficulty);
+        if (chosenCardId) {
+          engine.playCard(expectedPlayer, chosenCardId);
           syncEngineState();
         }
       }, remainingMs + 1500);

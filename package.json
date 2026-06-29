@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ai:train": "npx tsx training/train.ts",
+    "ai:tune": "npx tsx training/tune.ts",
+    "ai:eval": "npx tsx training/evaluate.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
