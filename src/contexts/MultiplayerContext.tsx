@@ -335,8 +335,13 @@ export const MultiplayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const currentSlot = lobbyState?.slots[gameState.currentPlayer];
     if (currentSlot && currentSlot.type === 'ai') {
-      const roundStartAt = gameState.roundStartAt ?? 0;
-      const roundDelayMs = gameState.roundStartDelayMs ?? 0;
+      // Handle null roundStartAt safely
+      if (gameState.roundStartAt === null) {
+        return;
+      }
+
+      const roundStartAt = gameState.roundStartAt;
+      const roundDelayMs = gameState.roundStartDelayMs;
       const remainingMs = Math.max(0, roundStartAt + roundDelayMs - Date.now());
 
       // ✅ Snapshot these values at schedule time

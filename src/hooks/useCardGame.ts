@@ -85,10 +85,9 @@ export const useCardGame = () => {
         return;
       }
 
-      const nextSelection = selectedCardIdx === index ? null : index;
-      setSelectedCardIdx(nextSelection);
+      setSelectedCardIdx((prev) => (prev === index ? null : index));
     },
-    [gameState, localPlayerId, selectedCardIdx],
+    [gameState, localPlayerId],
   );
 
   const placeCard = useCallback(() => {

@@ -482,6 +482,11 @@ export class GameEngine {
   }
 
   getNextActivePlayer(fromPlayerId: number): number {
+    if (fromPlayerId < 0 || fromPlayerId >= this.players.length) {
+      console.warn(`[GameEngine] Invalid player ID ${fromPlayerId}, defaulting to 0`);
+      return 0;
+    }
+
     for (let offset = 1; offset <= this.players.length; offset += 1) {
       const candidateId = (fromPlayerId + offset) % this.players.length;
 

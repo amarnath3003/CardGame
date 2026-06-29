@@ -135,7 +135,6 @@ const PlayButton = memo(function PlayButton({
   );
 });
 
-// ─── Keyboard shortcut ───────────────────────────────────────────────────────
 function KeyboardControls({ onPlaceCard }: { onPlaceCard: () => void }) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -144,7 +143,7 @@ function KeyboardControls({ onPlaceCard }: { onPlaceCard: () => void }) {
         onPlaceCard();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onPlaceCard]);
   return null;
@@ -356,7 +355,7 @@ export const GameScreen: React.FC = () => {
 
       {/* Game over modal */}
       <AnimatePresence>
-        {gameState.gameStatus === 'GAME_OVER' && gameState.gameLoser !== null && (
+        {gameState.gameStatus === 'GAME_OVER' && gameState.gameLoser !== null && gameState.players[gameState.gameLoser] && (
           <RoundOverModal
             title="GAME OVER"
             message={`${gameState.players[gameState.gameLoser].name} is the last player still holding cards.`}

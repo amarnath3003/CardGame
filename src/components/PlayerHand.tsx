@@ -240,7 +240,7 @@ export const PlayerHand = memo(function PlayerHand({
     if (position === 'top') {
       return Math.max(compact ? 12 : 14, Math.min(compact ? 20 : 18, available / (cardCount - 1)));
     }
-    return Math.max(compact ? 12 : 14, Math.min(compact ? 18 : 18, available / (cardCount - 1)));
+    return Math.max(compact ? 12 : 14, Math.min(compact ? 18 : 20, available / (cardCount - 1)));
   }, [cardCount, cardWidth, cardsAreaWidth, compact, position, useCompactSideStack]);
 
   const handHeight = compact
