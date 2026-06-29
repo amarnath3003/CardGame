@@ -69,10 +69,16 @@ body {
   --safe-left: env(safe-area-inset-left, 0px);
   min-height: 100dvh;
   width: 100vw;
+  overflow: hidden;
 }
 
 .game-root.compact-landscape {
   touch-action: manipulation;
+}
+
+/* Smooth all transitions for polish */
+.game-root * {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
 .card {

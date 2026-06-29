@@ -31,20 +31,18 @@ const CARD_WIDTHS: Record<CardVisualSize, number> = {
   lg: 80,
 };
 
-// Pre-computed static position maps — defined once outside the component
-// so they're never recreated on render.
 const POSITION_CLASSES_COMPACT = {
-  bottom: 'absolute bottom-[calc(0.25rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 flex justify-center z-40',
-  top: 'absolute top-[calc(1.0rem+var(--safe-top))] left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
-  left: 'absolute left-[calc(0.45rem+var(--safe-left))] top-[44%] -translate-y-1/2 z-20',
-  right: 'absolute right-[calc(0.45rem+var(--safe-right))] top-[44%] -translate-y-1/2 z-20',
+  bottom: 'absolute bottom-[calc(0.5rem+var(--safe-bottom))] left-1/2 -translate-x-1/2 flex justify-center z-40',
+  top: 'absolute top-[calc(1.2rem+var(--safe-top))] left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
+  left: 'absolute left-[calc(0.6rem+var(--safe-left))] top-[46%] -translate-y-1/2 z-20',
+  right: 'absolute right-[calc(0.6rem+var(--safe-right))] top-[46%] -translate-y-1/2 z-20',
 } as const;
 
 const POSITION_CLASSES_NORMAL = {
-  bottom: 'absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex justify-center z-40',
-  top: 'absolute top-4 md:top-16 left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
-  left: 'absolute left-4 md:left-24 top-1/2 -translate-y-1/2 flex justify-center rotate-90 z-20',
-  right: 'absolute right-4 md:right-24 top-1/2 -translate-y-1/2 flex justify-center -rotate-90 z-20',
+  bottom: 'absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex justify-center z-40',
+  top: 'absolute top-6 md:top-12 left-1/2 -translate-x-1/2 flex justify-center rotate-180 z-20',
+  left: 'absolute left-6 md:left-28 top-1/2 -translate-y-1/2 flex justify-center rotate-90 z-20',
+  right: 'absolute right-6 md:right-28 top-1/2 -translate-y-1/2 flex justify-center -rotate-90 z-20',
 } as const;
 
 const AVATAR_CLASSES_COMPACT = {
@@ -61,7 +59,6 @@ const AVATAR_CLASSES_NORMAL = {
   right: 'absolute -bottom-20 left-1/2 -translate-x-1/2',
 } as const;
 
-// Pre-compute fan transforms to avoid recomputing per render
 function getFanTransform(
   index: number,
   total: number,
@@ -74,13 +71,13 @@ function getFanTransform(
   const normalized = Math.abs(centered) / Math.max(1, total / 2);
 
   const maxSpread = compact
-    ? position === 'bottom' ? 30 : position === 'top' ? 18 : 24
-    : position === 'bottom' ? 54 : 26;
+    ? position === 'bottom' ? 32 : position === 'top' ? 20 : 26
+    : position === 'bottom' ? 56 : 28;
   const rotation = centered * (maxSpread / Math.max(1, total - 1));
 
   const arcDepth = compact
-    ? position === 'bottom' ? 24 : position === 'top' ? 10 : 14
-    : position === 'bottom' ? 42 : 24;
+    ? position === 'bottom' ? 28 : position === 'top' ? 12 : 16
+    : position === 'bottom' ? 46 : 26;
 
   return { rotation, yOffset: normalized * normalized * arcDepth };
 }
@@ -227,30 +224,31 @@ export const PlayerHand = memo(function PlayerHand({
   const cardsAreaWidth = useMemo(() => {
     if (useCompactSideStack) return 56;
     if (position === 'bottom' || position === 'top') {
-      const reservedSideSpace = compact ? (position === 'bottom' ? 220 : 180) : 96;
-      return Math.max(220, layout.viewportWidth - reservedSideSpace);
+      const reservedSideSpace = compact ? (position === 'bottom' ? 200 : 160) : 100;
+      const maxWidth = layout.viewportWidth - reservedSideSpace;
+      return Math.max(240, Math.min(maxWidth, 700));
     }
-    return compact ? 190 : 280;
+    return compact ? 200 : 320;
   }, [compact, layout.viewportWidth, position, useCompactSideStack]);
 
   const spacing = useMemo(() => {
     if (cardCount <= 1 || useCompactSideStack) return 0;
     const available = Math.max(cardWidth, cardsAreaWidth) - cardWidth;
     if (position === 'bottom') {
-      return Math.max(compact ? 16 : 22, Math.min(compact ? 28 : 40, available / (cardCount - 1)));
+      return Math.max(compact ? 18 : 24, Math.min(compact ? 32 : 44, available / (cardCount - 1)));
     }
     if (position === 'top') {
-      return Math.max(compact ? 10 : 12, Math.min(compact ? 18 : 15, available / (cardCount - 1)));
+      return Math.max(compact ? 12 : 14, Math.min(compact ? 20 : 18, available / (cardCount - 1)));
     }
-    return Math.max(compact ? 10 : 12, Math.min(compact ? 16 : 15, available / (cardCount - 1)));
+    return Math.max(compact ? 12 : 14, Math.min(compact ? 18 : 18, available / (cardCount - 1)));
   }, [cardCount, cardWidth, cardsAreaWidth, compact, position, useCompactSideStack]);
 
   const handHeight = compact
-    ? position === 'bottom' ? 88 : position === 'top' ? 62 : 74
-    : isLocalPlayer ? 132 : 92;
+    ? position === 'bottom' ? 100 : position === 'top' ? 70 : 80
+    : isLocalPlayer ? 140 : 100;
 
-  const selectedLift = compact ? 12 : 25;
-  const hoverLift = compact ? 10 : 20;
+  const selectedLift = compact ? 14 : 28;
+  const hoverLift = compact ? 12 : 22;
 
   // Stable card select handler
   const handleCardSelect = useCallback(

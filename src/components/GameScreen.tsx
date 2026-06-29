@@ -108,24 +108,25 @@ const PlayButton = memo(function PlayButton({
           initial={{ opacity: 0, y: 50, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.8 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
           className={`play-button absolute z-50 ${compact
-              ? 'bottom-[calc(4.9rem+var(--safe-bottom))] right-[calc(0.75rem+var(--safe-right))]'
-              : 'bottom-28 left-1/2 -translate-x-1/2 md:bottom-56'
+              ? 'bottom-[calc(5.2rem+var(--safe-bottom))] right-[calc(1rem+var(--safe-right))]'
+              : 'bottom-20 left-1/2 -translate-x-1/2 md:bottom-48'
             }`}
         >
           <button
             onClick={onPlace}
-            className={`group relative flex items-center rounded-full border-white bg-gradient-to-b from-yellow-400 to-orange-500 font-black text-white transition-all hover:scale-110 active:translate-y-[8px] active:shadow-[0_0px_0_#b35900,0_5px_10px_rgba(0,0,0,0.4)] ${compact
-                ? 'gap-2 border-[3px] px-5 py-2.5 text-lg shadow-[0_6px_0_#b35900,0_12px_20px_rgba(0,0,0,0.35)]'
-                : 'gap-3 border-[4px] px-8 py-3 text-2xl shadow-[0_8px_0_#b35900,0_15px_30px_rgba(0,0,0,0.4)] md:px-12 md:py-4 md:text-3xl'
+            className={`group relative flex items-center justify-center rounded-full border-white bg-gradient-to-b from-yellow-400 to-orange-500 font-black text-white transition-all hover:scale-110 active:translate-y-[6px] active:shadow-[0_2px_0_#b35900,0_4px_8px_rgba(0,0,0,0.3)] ${compact
+                ? 'gap-2 border-[3px] px-6 py-3 text-base shadow-[0_6px_0_#b35900,0_10px_16px_rgba(0,0,0,0.35)] min-w-[140px]'
+                : 'gap-3 border-[4px] px-10 py-4 text-2xl shadow-[0_8px_0_#b35900,0_14px_28px_rgba(0,0,0,0.4)] md:px-12 md:py-5 md:text-3xl md:gap-4'
               }`}
           >
             <span>PLAY</span>
             <Play
-              className={`${compact ? 'h-5 w-5' : 'h-8 w-8'} fill-current transition-transform group-hover:scale-125`}
+              className={`${compact ? 'h-5 w-5' : 'h-7 w-7'} fill-current transition-transform group-hover:scale-125 md:h-8 md:w-8`}
             />
             <div className="absolute inset-0 w-full h-full overflow-hidden rounded-full rounded-b-none pointer-events-none">
-              <div className="absolute left-[-50%] top-0 h-[50%] w-[200%] -rotate-12 translate-y-[-50%] bg-white/30" />
+              <div className="absolute left-[-50%] top-0 h-[50%] w-[200%] -rotate-12 translate-y-[-50%] bg-white/20" />
             </div>
           </button>
         </motion.div>
@@ -246,36 +247,36 @@ export const GameScreen: React.FC = () => {
     >
       {/* Table felt */}
       <div
-        className={`absolute left-1/2 -translate-x-1/2 rounded-[100%] border-[#aaff55]/50 bg-gradient-to-b from-[#88e633] to-[#44aa00] shadow-[inset_0_40px_80px_rgba(0,100,0,0.4)] pointer-events-none ${compact
-            ? '-bottom-[70vh] h-[125vh] w-[220vw] border-t-[10px]'
-            : '-bottom-[60vh] h-[120vh] w-[200vw] border-t-[12px]'
+        className={`absolute left-1/2 -translate-x-1/2 rounded-[100%] border-[#aaff55]/50 bg-gradient-to-b from-[#88e633] to-[#44aa00] shadow-[inset_0_40px_80px_rgba(0,100,0,0.4)] pointer-events-none z-0 ${compact
+            ? '-bottom-[65vh] h-[120vh] w-[210vw] border-t-[8px]'
+            : '-bottom-[55vh] h-[115vh] w-[190vw] border-t-[12px]'
           }`}
       />
 
       {/* Exit button */}
-      <div className="absolute left-[calc(0.75rem+var(--safe-left))] top-[calc(0.75rem+var(--safe-top))] z-40">
+      <div className="absolute left-[calc(1rem+var(--safe-left))] top-[calc(1rem+var(--safe-top))] z-40">
         <button
           onClick={() => setShowExitConfirm(true)}
-          className={`group flex items-center justify-center rounded-full border-2 border-white bg-gray-800 text-white transition-all hover:bg-red-500 hover:border-red-400 ${compact ? 'p-2' : 'p-3 md:p-4'
+          className={`group flex items-center justify-center rounded-full border-3 border-white bg-gray-900 hover:bg-red-600 text-white transition-all ${compact ? 'p-2.5 min-w-[44px] min-h-[44px]' : 'p-3 min-w-[48px] min-h-[48px] md:p-4 md:min-w-[56px] md:min-h-[56px]'
             }`}
           title="Leave Game"
         >
           <LogOut
-            className={`${compact ? 'h-5 w-5' : 'h-6 w-6 md:h-8 md:w-8'} transition-transform group-hover:-translate-x-1`}
+            className={`${compact ? 'h-5 w-5' : 'h-6 w-6 md:h-7 md:w-7'} transition-transform group-hover:-translate-x-1`}
           />
           {!compact && (
-            <span className="ml-2 hidden text-sm font-black tracking-widest md:block">EXIT</span>
+            <span className="ml-2 hidden text-xs font-bold tracking-widest md:block">EXIT</span>
           )}
         </button>
       </div>
 
       {/* Round badge */}
       <div
-        className={`game-header absolute right-[calc(0.75rem+var(--safe-right))] top-[calc(0.75rem+var(--safe-top))] z-30 flex items-center rounded-full border-2 border-white bg-gray-800 shadow-[0_8px_16px_rgba(0,0,0,0.2)] ${compact ? 'px-4 py-1.5' : 'px-6 py-2 md:py-3'
+        className={`game-header absolute right-[calc(1rem+var(--safe-right))] top-[calc(1rem+var(--safe-top))] z-30 flex items-center rounded-full border-3 border-white bg-gray-900 shadow-[0_8px_20px_rgba(0,0,0,0.3)] ${compact ? 'px-4 py-2 min-w-[100px]' : 'px-6 py-2.5 md:py-3.5 md:px-8'
           }`}
       >
         <p
-          className={`font-bold text-yellow-300 drop-shadow-md ${compact ? 'text-sm' : 'text-base md:text-xl'}`}
+          className={`font-black text-yellow-300 drop-shadow-md text-center ${compact ? 'text-sm' : 'text-base md:text-lg'}`}
         >
           ROUND {gameState.roundNumber}
         </p>

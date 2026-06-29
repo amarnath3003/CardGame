@@ -27,16 +27,14 @@ export const MiddleDeck: React.FC<MiddleDeckProps> = ({ cards, layout }) => {
 
   const compact = layout.isCompactLandscape;
   const deckSize = compact ? 'md' : 'lg';
-
+  const centerTop = compact ? 'top-[48%]' : 'top-1/2';
 
   return (
     <div
-      className={`absolute left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center pointer-events-none ${
-        compact ? 'top-[45%]' : 'top-1/2'
-      }`}
+      className={`absolute left-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center pointer-events-none ${centerTop}`}
       style={{
-        width: compact ? 'clamp(148px, 26vw, 220px)' : 'clamp(180px, 32vw, 320px)',
-        height: compact ? 'clamp(150px, 24vw, 210px)' : 'clamp(220px, 40vw, 360px)',
+        width: compact ? 'clamp(160px, 28vw, 240px)' : 'clamp(200px, 35vw, 340px)',
+        height: compact ? 'clamp(160px, 26vw, 230px)' : 'clamp(240px, 42vw, 380px)',
       }}
     >
       
